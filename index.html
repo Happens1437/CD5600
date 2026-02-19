@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CD5600 | Premier High-Fidelity Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap');
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --brand-yellow: #ffcc00;
+            --brand-black: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--brand-black);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { font-family: 'Syne', sans-serif; }
+
+        .gradient-mesh {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 20%, #1a1a00 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, #1a1a1a 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #050505 0%, #000000 100%);
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .cd-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid transparent;
+        }
+
+        .cd-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--brand-yellow);
+            background: rgba(255, 204, 0, 0.05);
+        }
+
+        .nav-link {
+            position: relative; cursor: pointer; transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -4px; left: 0; background-color: var(--brand-yellow);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: var(--brand-yellow); }
+
+        .carousel-container { scroll-behavior: smooth; scrollbar-width: none; }
+        .carousel-container::-webkit-scrollbar { display: none; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        .page-section { display: none; animation: fadeIn 0.5s ease forwards; }
+        .page-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 204, 0, 0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        #ai-sidebar {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Form Styles */
+        .admin-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 12px;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .admin-input:focus {
+            border-color: var(--brand-yellow);
+        }
+        .file-drop-zone {
+            border: 2px dashed rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        .file-drop-zone:hover, .file-drop-zone.dragover {
+            border-color: var(--brand-yellow);
+            background: rgba(255,204,0,0.05);
+        }
+    </style>
+</head>
+<body class="custom-scrollbar">
+    <div class="gradient-mesh"></div>
+
+    <!-- UI Toast Notification -->
+    <div id="toast" class="fixed bottom-10 right-10 z-[100] transform translate-y-24 opacity-0 transition-all duration-300 glass border-l-4 border-[#ffcc00] px-6 py-4 flex items-center gap-4 text-sm font-bold tracking-widest uppercase shadow-2xl pointer-events-none">
+        <i class="fas fa-info-circle text-[#ffcc00]"></i>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- AI Sidebar -->
+    <div id="ai-sidebar" class="fixed right-0 top-0 h-full w-full md:w-96 glass z-[60] translate-x-full border-l border-[#ffcc00]/20 flex flex-col">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#ffcc00]/5">
+            <h3 class="font-black italic uppercase text-sm tracking-widest text-[#ffcc00]">✨ AI Curator Assistant</h3>
+            <button onclick="toggleAI()" class="text-white/40 hover:text-white"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="ai-chat-history" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar text-sm">
+            <div class="p-4 bg-white/5 border border-white/10 rounded-sm">
+                Hello. I am the CD5600 Sonic Curator. I have full knowledge of our vault. Tell me what sounds you are hunting for.
+            </div>
+        </div>
+        <div class="p-4 bg-black/40 border-t border-white/10">
+            <div class="relative">
+                <input id="ai-input" type="text" placeholder="Ask for a recommendation..." 
+                    class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 pr-12 text-xs focus:border-[#ffcc00] outline-none"
+                    onkeypress="if(event.key === 'Enter') askAI()">
+                <button onclick="askAI()" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#ffcc00] hover:scale-110 transition-transform">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Access Modal -->
+    <div id="security-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+        <div class="glass w-full max-w-sm p-8 text-center border border-[#ffcc00]/30 rounded-sm">
+            <div class="mb-6">
+                <i class="fas fa-fingerprint text-4xl text-[#ffcc00] animate-pulse"></i>
+            </div>
+            <h3 class="font-black italic uppercase text-xl mb-2 text-white">Security Clearance</h3>
+            <p class="text-xs text-white/40 uppercase tracking-widest mb-6">Restricted Vault Access</p>
+            
+            <input type="password" id="admin-code-input" placeholder="Enter Access Code" 
+                   class="w-full bg-white/5 border border-white/10 text-center text-white p-3 mb-4 rounded-sm outline-none focus:border-[#ffcc00] transition-colors uppercase tracking-widest">
+            
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="closeSecurityModal()" class="border border-white/10 text-white/60 py-3 uppercase text-xs font-bold hover:bg-white/5 transition-colors">Cancel</button>
+                <button onclick="verifyAccess()" class="bg-[#ffcc00] text-black py-3 uppercase text-xs font-bold hover:bg-white transition-colors">Authenticate</button>
+            </div>
+            <p id="access-error" class="text-red-500 text-[10px] uppercase mt-4 hidden font-bold tracking-widest">Access Denied: Invalid Credentials</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center glass rounded-2xl px-8 py-3">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
+                <div class="w-10 h-10 relative flex items-center justify-center">
+                    <svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full">
+                        <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                    </svg>
+                    <span class="relative z-10 text-[10px] font-black text-black leading-none text-center">CD<br>5600</span>
+                </div>
+                <span class="text-xl font-bold tracking-tighter uppercase">CD5600</span>
+            </div>
+            
+            <div class="hidden md:flex space-x-8 items-center font-bold uppercase text-xs tracking-widest">
+                <a onclick="showPage('home')" class="nav-link active" id="nav-home">Home</a>
+                <a onclick="showPage('catalog')" class="nav-link" id="nav-catalog">Catalog</a>
+                <a onclick="showPage('new')" class="nav-link" id="nav-new">New</a>
+                <a onclick="showPage('collectors')" class="nav-link" id="nav-collectors">Collectors</a>
+                <a onclick="showPage('about')" class="nav-link" id="nav-about">About</a>
+                <!-- Admin link appears only after unlocking -->
+                <a onclick="showPage('admin')" class="nav-link text-[#ffcc00] hidden" id="nav-admin">Admin Dashboard</a>
+            </div>
+
+            <div class="flex items-center space-x-5">
+                <button class="hover:text-[#ffcc00] transition-colors" onclick="showPage('catalog'); document.getElementById('catalog-search').focus();"><i class="fas fa-search"></i></button>
+                <div class="relative cursor-pointer" onclick="showPage('cart')">
+                    <button class="hover:text-[#ffcc00] transition-colors"><i class="fas fa-shopping-cart"></i></button>
+                    <span class="absolute -top-2 -right-2 bg-[#ffcc00] text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center" id="cart-count">0</span>
+                </div>
+                <button class="md:hidden"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <!-- Home Section -->
+        <section id="home" class="page-section active pt-40 pb-20 px-6">
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center mb-32">
+                <div>
+                    <div class="flex items-center space-x-4 mb-6">
+                        <span class="h-px w-12 bg-[#ffcc00]"></span>
+                        <span class="text-[#ffcc00] font-bold text-xs uppercase tracking-[0.3em]">Cloud Vault Synchronized</span>
+                    </div>
+                    <h1 class="hero-title text-6xl lg:text-8xl font-black mb-8 leading-tight italic uppercase">
+                        MUSIC YOU <br><span class="text-[#ffcc00]">CAN HOLD.</span>
+                    </h1>
+                    <p class="text-lg text-white/60 mb-10 max-w-lg leading-relaxed">
+                        CD5600 operates on a globally synchronized vault. Experience the bit-perfect original master today.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="showPage('catalog')" class="bg-[#ffcc00] hover:bg-white text-black px-8 py-4 rounded-sm font-bold uppercase tracking-widest transition-all transform hover:scale-105">
+                            Browse Collection
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relative flex justify-center items-center">
+                    <div class="w-72 h-72 md:w-96 md:h-96 rounded-full border-4 border-white/5 flex items-center justify-center overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-[#ffcc00]/10 to-transparent"></div>
+                        <div class="w-64 h-64 md:w-80 md:h-80 rounded-full glass border-none flex items-center justify-center shadow-2xl animate-[spin_12s_linear_infinite] relative">
+                             <div class="absolute inset-0 rounded-full opacity-20" style="background: conic-gradient(from 180deg at 50% 50%, #ffcc00, #ffffff, #ffcc00, #333, #ffcc00);"></div>
+                             <div class="absolute inset-2 rounded-full border border-white/5"></div>
+                             <div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-black flex items-center justify-center border-4 border-[#ffcc00]">
+                                <svg viewBox="0 0 100 100" class="w-12 h-12">
+                                    <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                                </svg>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto py-20 border-t border-white/5">
+                <div class="flex justify-between items-center mb-12">
+                    <h2 class="text-3xl font-black italic uppercase">Vault <span class="text-[#ffcc00]">Highlights</span></h2>
+                    <div class="flex gap-4">
+                        <button onclick="scrollCarousel(-1)" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#ffcc00] hover:text-black transition-all">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button onclick="scrollCarousel(1)" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#ffcc00] hover:text-black transition-all">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="home-carousel" class="carousel-container flex gap-6 overflow-x-auto pb-8"></div>
+            </div>
+        </section>
+
+        <!-- Catalog Section -->
+        <section id="catalog" class="page-section pt-40 pb-20 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12 border-b border-white/10 pb-8 gap-6">
+                    <h2 class="text-4xl font-black italic uppercase">Master <span class="text-[#ffcc00]">Catalog</span></h2>
+                    
+                    <!-- Search Bar -->
+                    <div class="relative w-full md:w-96 group">
+                        <input type="text" id="catalog-search" oninput="handleSearch()" placeholder="Search artist or album..." 
+                               class="w-full bg-white/5 border border-white/10 rounded-sm px-6 py-4 pl-12 text-sm focus:border-[#ffcc00] outline-none transition-all">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#ffcc00] transition-colors"></i>
+                    </div>
+                </div>
+                <div id="catalog-grid" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- Admin Section -->
+        <section id="admin" class="page-section pt-40 pb-20 px-6">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-4xl font-black italic uppercase mb-12 border-b border-white/10 pb-4">Cloud <span class="text-[#ffcc00]">Admin Console</span></h2>
+                
+                <div class="glass p-8 border border-white/10 rounded-sm">
+                    <div class="grid gap-6">
+                        <!-- File Upload -->
+                        <div class="col-span-full">
+                            <label class="block text-xs font-bold uppercase tracking-widest text-white/50 mb-2">Album Artwork</label>
+                            <div class="file-drop-zone p-8 text-center cursor-pointer rounded-sm" onclick="document.getElementById('img-upload').click()">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-white/20 mb-3"></i>
+                                <p class="text-sm text-white/60">Click to upload CD Cover</p>
+                                <p class="text-[10px] text-white/30 uppercase mt-1">Images are compressed securely for Cloud Storage</p>
+                                <input type="file" id="img-upload" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+                            </div>
+                            <div id="preview-container" class="mt-4 hidden">
+                                <p class="text-[10px] text-[#ffcc00] uppercase mb-2">Preview:</p>
+                                <img id="img-preview" class="w-32 h-32 object-cover border border-white/20">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-widest text-white/50 mb-2">Artist Name</label>
+                                <input type="text" id="admin-artist" class="admin-input" placeholder="e.g. Daft Punk">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-widest text-white/50 mb-2">Album Title</label>
+                                <input type="text" id="admin-album" class="admin-input" placeholder="e.g. Discovery">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-widest text-white/50 mb-2">Price (GEL)</label>
+                                <input type="number" id="admin-price" class="admin-input" placeholder="45.00">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-widest text-white/50 mb-2">Description / Note</label>
+                                <input type="text" id="admin-desc" class="admin-input" placeholder="Special edition details...">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-widest text-white/50 mb-2">Tracklist (Comma Separated)</label>
+                            <textarea id="admin-tracks" class="admin-input h-24" placeholder="Track 1, Track 2, Track 3..."></textarea>
+                        </div>
+
+                        <button onclick="submitProduct()" class="bg-[#ffcc00] text-black font-black uppercase tracking-[0.2em] py-4 hover:bg-white transition-colors">
+                            <i class="fas fa-database mr-2"></i> Inject into Cloud Vault
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Detail Section -->
+        <section id="product-detail" class="page-section pt-40 pb-20 px-6">
+            <div class="max-w-7xl mx-auto" id="detail-mount"></div>
+        </section>
+
+        <!-- Cart Section -->
+        <section id="cart" class="page-section pt-40 pb-20 px-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-black italic uppercase mb-12 border-b border-white/10 pb-4">Shopping <span class="text-[#ffcc00]">Cart</span></h2>
+                <div id="cart-mount" class="space-y-6"></div>
+                <div id="cart-summary" class="mt-12 p-8 glass border-t-2 border-[#ffcc00] flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div class="text-center md:text-left">
+                        <p class="text-white/40 uppercase text-xs tracking-widest mb-1">Total Balance</p>
+                        <h3 class="text-4xl font-black text-[#ffcc00]" id="cart-total">₾0.00</h3>
+                    </div>
+                    <button class="bg-white text-black px-12 py-4 rounded-sm font-black uppercase tracking-widest hover:bg-[#ffcc00] transition-colors w-full md:w-auto">Finalize Checkout</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section -->
+        <section id="new" class="page-section pt-40 pb-20 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <span class="text-[#ffcc00] font-bold text-xs uppercase tracking-[0.4em]">Vault Synchronized</span>
+                    <h2 class="text-5xl font-black italic uppercase mt-4">New Additions</h2>
+                </div>
+                <div id="new-arrivals-list" class="grid md:grid-cols-2 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- Collectors Section -->
+        <section id="collectors" class="page-section pt-40 pb-20 px-6">
+            <div class="max-w-4xl mx-auto glass p-10 md:p-16 text-center border-t-4 border-[#ffcc00]">
+                <div class="w-20 h-20 mx-auto mb-8">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                    </svg>
+                </div>
+                <h2 class="text-4xl font-black italic uppercase mb-6 italic">Collectors Circle</h2>
+                <p class="text-xl text-white/60 mb-10 leading-relaxed">
+                    Secure archival gold masters. Members receive priority notification for rare imports and out-of-print inventory.
+                </p>
+                <div class="grid sm:grid-cols-2 gap-4 text-left mb-12">
+                    <div class="p-4 bg-white/5 border border-white/5 flex items-center gap-4">
+                        <i class="fas fa-check text-[#ffcc00]"></i>
+                        <span class="text-sm font-bold uppercase">Priority Import Notifications</span>
+                    </div>
+                    <div class="p-4 bg-white/5 border border-white/5 flex items-center gap-4">
+                        <i class="fas fa-check text-[#ffcc00]"></i>
+                        <span class="text-sm font-bold uppercase">Spectral Analysis Access</span>
+                    </div>
+                </div>
+                <button class="bg-[#ffcc00] text-black px-12 py-5 font-black uppercase tracking-[0.2em] hover:bg-white transition-all w-full sm:w-auto">Apply for Access</button>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="page-section pt-40 pb-20 px-6">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-6xl font-black italic uppercase mb-12">Our <span class="text-[#ffcc00]">Standard.</span></h2>
+                <div class="space-y-8 text-lg text-white/50 leading-relaxed">
+                    <p>CD5600 operates on a singular principle: <span class="text-white font-bold">Physical media is the only way to preserve audio history.</span></p>
+                    <p>Every item in our archive is tested for data degradation and physical integrity. We curate the highest-standard digital masters for enthusiasts who demand the original 1.41 Mbps bit-rate.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-20 px-6 border-t border-white/5 mt-20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
+                <div class="w-8 h-8 relative">
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                    </svg>
+                </div>
+                <span class="font-bold tracking-tighter uppercase text-xl">CD5600</span>
+            </div>
+            <div class="flex space-x-8 text-xs font-bold uppercase tracking-widest text-white/40">
+                <a href="#" class="hover:text-[#ffcc00] transition-colors">Privacy</a>
+                <a href="#" class="hover:text-[#ffcc00] transition-colors">Shipping</a>
+                <a href="#" class="hover:text-[#ffcc00] transition-colors">Returns</a>
+                <a href="#" class="hover:text-[#ffcc00] transition-colors">Contact</a>
+                <a onclick="attemptAdminAccess()" class="hover:text-[#ffcc00] transition-colors cursor-pointer text-[#ffcc00]/50">Staff Entry</a>
+            </div>
+        </div>
+        <div class="mt-12 text-center text-[10px] text-white/20 uppercase tracking-[0.4em]">
+            © 2026 CD5600 Industrial High-Fidelity. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- Use Type=Module to Enable Cloud Firebase Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const apiKey = "";
+        
+        // Base Catalog Array
+        const defaultCatalog = [
+            { id: 100, artist: 'Rolling Stones', album: 'Tattoo You', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/1/16/TattooYou81.jpg' },
+            { id: 101, artist: 'Sam Smith', album: 'Love Goes', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/b/b5/Sam_Smith_-_Love_Goes.png' },
+            { id: 102, artist: 'Radiohead', album: 'The King of Limbs', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/a/a2/The_King_of_Limbs.jpg' },
+            { id: 103, artist: 'Radiohead', album: 'In Rainbows', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/2/2e/In_Rainbows_Official_Cover.jpg' },
+            { id: 104, artist: 'Pink Floyd', album: 'Dark Side of the Moon', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/3/3b/Dark_Side_of_the_Moon.png' },
+            { id: 105, artist: 'Cigarettes After Sex', album: 'Self-Titled', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/d/df/Cigarettes_After_Sex_-_Cigarettes_After_Sex.png' },
+            { id: 106, artist: 'Radiohead', album: 'OK Computer', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/b/ba/Radioheadokcomputer.png' },
+            { id: 107, artist: 'twenty one pilots', album: 'Trench', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/f/f3/Trench_Twenty_One_Pilots.png' },
+            { id: 108, artist: 'Kanye West', album: 'Graduation', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/7/70/Graduation_%28album%29.jpg' },
+            { id: 109, artist: 'The Beatles', album: 'Let It Be', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/2/25/LetItBe.jpg' },
+            { id: 110, artist: 'Kendrick Lamar', album: 'Good Kid, m.A.A.d City', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/8/8f/Good_kid_maad_city_album_cover.jpg' },
+            { id: 111, artist: 'Charli XCX', album: 'Brat', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/6/60/Charli_XCX_-_Brat.png' },
+            { id: 112, artist: 'Nirvana', album: 'Nevermind', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/b/b7/NirvanaNevermindalbumcover.jpg' },
+            { id: 113, artist: 'Taylor Swift', album: '1989', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/f/f6/Taylor_Swift_-_1989.png' },
+            { id: 114, artist: 'Maroon 5', album: 'Jordi', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/0/0a/Maroon_5_-_Jordi.png' },
+            { id: 115, artist: 'The Strokes', album: 'The New Abnormal', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/1/1a/The_Strokes_-_The_New_Abnormal.png' },
+            { id: 116, artist: 'Seatbelts', album: 'Cowboy Bebop OST', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/c/c1/CowboyBebopSoundtrack1.jpg' },
+            { id: 117, artist: 'Evangelion', album: 'Evangelion Finale', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/d/dc/Evangelion_Finally.jpg' },
+            { id: 120, artist: 'Frank Ocean', album: 'Channel Orange', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/2/28/Channel_ORANGE.jpg' },
+            { id: 121, artist: 'La La Land', album: 'Original Soundtrack', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/8/86/La_La_Land_soundtrack_cover.jpg' },
+            { id: 125, artist: 'AC/DC', album: 'PWR UP', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/3/31/AC_DC_-_Power_Up.png' },
+            { id: 127, artist: 'C418', album: 'Minecraft Volume Alpha', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/0/0e/C418_-_Minecraft_-_Volume_Alpha.png' },
+            { id: 130, artist: 'Slipknot', album: 'We Are Not Your Kind', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/4/44/Slipknot_-_We_Are_Not_Your_Kind.png' },
+            { id: 132, artist: 'Twenty One Pilots', album: 'Scaled And Icy', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/5/52/Twenty_One_Pilots_-_Scaled_and_Icy.png' },
+            { id: 133, artist: 'Daft Punk', album: 'Random Access Memories', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Random_Access_Memories.jpg' },
+            { id: 137, artist: 'Tyler, The Creator', album: 'IGOR', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/5/51/Igor_-_Tyler%2C_the_Creator.jpg' },
+            { id: 138, artist: 'Travis Scott', album: 'ASTROWORLD', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/1/17/Travis_Scott_-_Astroworld.png' },
+            { id: 140, artist: 'Gorillaz', album: 'Cracker Island', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/4/4b/Gorillaz_-_Cracker_Island.jpg' },
+            { id: 141, artist: 'Linkin Park', album: 'Meteora', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/b/b2/Meteora_LP.jpg' },
+            { id: 142, artist: 'Twenty One Pilots', album: 'Clancy', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/e/e0/Twenty_One_Pilots_-_Clancy.png' },
+            { id: 143, artist: 'Kendrick Lamar', album: 'Mr. Morale', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/e/e1/Kendrick_Lamar_-_Mr._Morale_%26_the_Big_Steppers.jpg' },
+            { id: 144, artist: 'XXXTENTACION', album: 'Skins', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/e/e6/XXXTentacion_-_Skins.png' },
+            { id: 145, artist: 'Lana Del Rey', album: 'Ocean Blvd', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/3/30/Lana_Del_Rey_-_Did_You_Know_That_There%27s_a_Tunnel_Under_Ocean_Blvd.png' },
+            { id: 146, artist: 'Billie Eilish', album: 'Happier Than Ever', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/a/a4/Billie_Eilish_-_Happier_Than_Ever.png' },
+            { id: 148, artist: 'Metallica', album: '...And Justice For All', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/b/bd/Metallica_-_...And_Justice_for_All_cover.jpg' },
+            { id: 150, artist: 'Kendrick Lamar', album: 'DAMN.', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/5/51/Kendrick_Lamar_-_Damn.png' },
+            { id: 151, artist: 'XXXTENTACION', album: 'Bad Vibes Forever', price: 45.00, img: 'https://upload.wikimedia.org/wikipedia/en/6/6c/XXXTentacion_-_Bad_Vibes_Forever.png' }
+        ];
+
+        let firestoreProducts = [];
+        let fullCatalog = [...defaultCatalog];
+        let cart = [];
+        let uploadedImage = "";
+        
+        // --- Firebase Cloud Initialization ---
+        let app, auth, db;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cd5600-app-default';
+
+        if (typeof __firebase_config !== 'undefined') {
+            const firebaseConfig = JSON.parse(__firebase_config);
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+
+            const initAuth = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch(e) { console.error("Vault Auth Error", e); }
+            };
+
+            initAuth();
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Monitor Cloud Catalog (Public)
+                    const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+                    onSnapshot(productsRef, (snapshot) => {
+                        const fetched = [];
+                        snapshot.forEach(doc => {
+                            fetched.push({ ...doc.data() });
+                        });
+                        
+                        // Newest uploads first
+                        firestoreProducts = fetched.sort((a, b) => b.id - a.id);
+                        fullCatalog = [...firestoreProducts, ...defaultCatalog];
+                        window.renderAll();
+                    }, (error) => {
+                        console.error("Vault Sync Error:", error);
+                    });
+                }
+            });
+        }
+
+        // --- Custom UI Notifications ---
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3500);
+        }
+
+        // --- Window Expositions for HTML interaction ---
+        window.getProduct = function(id) {
+            return fullCatalog.find(x => x.id == id) || { artist: 'Unknown', album: 'Unknown Unit', price: 0, img: '' };
+        }
+
+        window.addToCart = function(event, id) {
+            if (event) event.stopPropagation();
+            const product = window.getProduct(id);
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            window.updateCartUI();
+            window.showToast(`Unit Serial ${id} secured to Cart.`);
+        }
+
+        window.removeFromCart = function(id) {
+            cart = cart.filter(item => item.id !== id);
+            window.updateCartUI();
+        }
+
+        window.updateQuantity = function(id, delta) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity < 1) window.removeFromCart(id);
+                else window.updateCartUI();
+            }
+        }
+
+        window.updateCartUI = function() {
+            const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+            document.getElementById('cart-count').innerText = count;
+            
+            const cartMount = document.getElementById('cart-mount');
+            const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
+
+            if (cart.length === 0) {
+                cartMount.innerHTML = '<div class="text-center py-20 text-white/20 uppercase tracking-widest font-bold">Your inventory is empty</div>';
+            } else {
+                cartMount.innerHTML = cart.map(item => `
+                    <div class="glass p-6 flex items-center gap-6 group">
+                        <div class="w-24 h-24 bg-white/5 flex-shrink-0">
+                            <img src="${item.img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold uppercase italic">${item.album}</h4>
+                            <p class="text-white/40 text-[10px] uppercase">${item.artist}</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-black/40 px-4 py-2 rounded-sm border border-white/5">
+                            <button onclick="updateQuantity(${item.id}, -1)" class="hover:text-[#ffcc00]"><i class="fas fa-minus"></i></button>
+                            <span class="font-bold w-6 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)" class="hover:text-[#ffcc00]"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <p class="text-[#ffcc00] font-black w-24 text-right">₾${(item.price * item.quantity).toFixed(2)}</p>
+                        <button onclick="removeFromCart(${item.id})" class="text-white/20 hover:text-red-500 transition-colors"><i class="fas fa-trash"></i></button>
+                    </div>
+                `).join('');
+            }
+
+            const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            document.getElementById('cart-total').innerText = `₾${total.toFixed(2)}`;
+        }
+
+        // --- Admin Functions & Security ---
+        window.attemptAdminAccess = function() {
+            document.getElementById('security-modal').classList.remove('hidden');
+            setTimeout(() => {
+                const input = document.getElementById('admin-code-input');
+                input.value = '';
+                input.focus();
+                document.getElementById('access-error').classList.add('hidden');
+            }, 100);
+        }
+
+        window.closeSecurityModal = function() {
+            document.getElementById('security-modal').classList.add('hidden');
+        }
+
+        window.verifyAccess = function() {
+            const code = document.getElementById('admin-code-input').value;
+            if (code === "CD5600") {
+                window.closeSecurityModal();
+                document.getElementById('nav-admin').classList.remove('hidden'); // Unlock Navigation
+                window.showPage('admin');
+                window.showToast("Security Clearance Granted.");
+            } else {
+                document.getElementById('access-error').classList.remove('hidden');
+                document.getElementById('admin-code-input').classList.add('border-red-500');
+            }
+        }
+        
+        const adminInput = document.getElementById('admin-code-input');
+        if (adminInput) {
+            adminInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    window.verifyAccess();
+                }
+            });
+        }
+
+        // Processing Image uploads for Cloud (Resizing and Compressing before Base64)
+        window.handleImageUpload = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_DIMENSION = 600; 
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_DIMENSION) {
+                            height *= MAX_DIMENSION / width;
+                            width = MAX_DIMENSION;
+                        }
+                    } else {
+                        if (height > MAX_DIMENSION) {
+                            width *= MAX_DIMENSION / height;
+                            height = MAX_DIMENSION;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Compress to JPG so it safely fits in Firestore limits
+                    uploadedImage = canvas.toDataURL('image/jpeg', 0.85);
+                    
+                    document.getElementById('img-preview').src = uploadedImage;
+                    document.getElementById('preview-container').classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Upload to Cloud Firestore
+        window.submitProduct = async function() {
+            const artist = document.getElementById('admin-artist').value;
+            const album = document.getElementById('admin-album').value;
+            const price = parseFloat(document.getElementById('admin-price').value);
+            const desc = document.getElementById('admin-desc').value;
+            const tracks = document.getElementById('admin-tracks').value.split(',').map(t => t.trim()).filter(t => t);
+
+            if (!artist || !album || !price || !uploadedImage) {
+                window.showToast("Error: Missing Required Vault Fields.");
+                return;
+            }
+
+            // Create unique numeric ID above existing ranges
+            const newId = Math.max(...fullCatalog.map(p => p.id), 999) + 1;
+            const newProduct = {
+                id: newId,
+                artist: artist,
+                album: album,
+                price: price,
+                img: uploadedImage,
+                description: desc,
+                tracks: tracks
+            };
+
+            // Sync to Firestore if available
+            if (db && auth && auth.currentUser) {
+                try {
+                    window.showToast("Syncing to Global Cloud Vault...");
+                    const docRef = doc(collection(db, 'artifacts', appId, 'public', 'data', 'products'), newId.toString());
+                    await setDoc(docRef, newProduct);
+                    window.showToast("Product Synchronized with Cloud Database!");
+                } catch (e) {
+                    console.error("Firestore sync error", e);
+                    window.showToast("Network Error: Local Save Applied.");
+                    // Fallback locally just in case
+                    fullCatalog.unshift(newProduct);
+                    window.renderAll();
+                }
+            } else {
+                // If cloud fails or missing config
+                fullCatalog.unshift(newProduct);
+                window.renderAll();
+                window.showToast("Product saved locally (Cloud not configured).");
+            }
+
+            // Clear Form Elements
+            document.getElementById('admin-artist').value = "";
+            document.getElementById('admin-album').value = "";
+            document.getElementById('admin-price').value = "";
+            document.getElementById('admin-desc').value = "";
+            document.getElementById('admin-tracks').value = "";
+            document.getElementById('img-upload').value = "";
+            document.getElementById('preview-container').classList.add('hidden');
+            uploadedImage = "";
+
+            window.showPage('catalog');
+        }
+
+        // --- Core Application & AI ---
+        window.callGemini = async function(prompt, systemInstruction = "") {
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined
+                        })
+                    });
+                    const data = await response.json();
+                    if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        return data.candidates[0].content.parts[0].text;
+                    }
+                    throw new Error("Invalid response");
+                } catch (e) {
+                    if (i === 4) throw e;
+                    await new Promise(r => setTimeout(r, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        window.showProductDetail = async function(id) {
+            const product = window.getProduct(id);
+            const mount = document.getElementById('detail-mount');
+            const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
+            
+            window.showPage('product-detail');
+            
+            mount.innerHTML = `
+                <div class="grid lg:grid-cols-2 gap-16 items-start">
+                    <div>
+                        <button onclick="showPage('catalog')" class="text-xs font-bold uppercase tracking-widest text-[#ffcc00] mb-8 hover:underline">
+                            <i class="fas fa-arrow-left mr-2"></i> Back to Catalog
+                        </button>
+                        <div class="aspect-square glass p-4 border-2 border-white/5">
+                            <img src="${product.img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover border border-white/10 transition-all duration-700">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <span class="h-px w-8 bg-[#ffcc00]"></span>
+                            <span class="text-[#ffcc00] font-bold text-xs uppercase tracking-widest">Serial_ID: ${id}-HIFI</span>
+                        </div>
+                        <h2 class="text-5xl font-black uppercase italic mb-2">${product.album}</h2>
+                        <p class="text-2xl text-white/40 uppercase font-light tracking-tighter mb-8">${product.artist}</p>
+                        
+                        <div class="glass p-8 border-l-4 border-[#ffcc00] mb-8">
+                            <p class="text-xs font-black uppercase text-[#ffcc00] mb-4">✨ Sonic Analysis</p>
+                            ${product.description ? `<p class="text-sm leading-relaxed italic text-white/80">${product.description}</p>` : `
+                            <div id="ai-detail-insight">
+                                <div class="ai-shimmer h-4 w-3/4 mb-4 rounded-full"></div>
+                                <div class="ai-shimmer h-4 w-1/2 rounded-full"></div>
+                            </div>`}
+                        </div>
+
+                        <div class="flex items-end gap-8 mb-12">
+                            <div>
+                                <p class="text-[10px] text-white/30 uppercase tracking-[0.3em] mb-1">Unit Price</p>
+                                <p class="text-5xl font-black text-[#ffcc00]">₾${product.price.toFixed(2)}</p>
+                            </div>
+                            <button onclick="addToCart(null, ${id})" class="bg-[#ffcc00] text-black px-12 py-5 font-black uppercase tracking-widest hover:bg-white transition-all transform hover:-translate-y-1">
+                                Secure Purchase
+                            </button>
+                        </div>
+
+                        <div class="space-y-4">
+                            ${product.tracks && product.tracks.length > 0 ? `
+                            <div>
+                                <h4 class="text-xs font-black uppercase tracking-widest border-b border-white/10 pb-2 mb-4">Audio Tracklist</h4>
+                                <ul class="space-y-3 text-sm text-white/60">
+                                    ${product.tracks.map((t, i) => `<li class="flex justify-between track-item py-2 px-2"><span>${(i+1).toString().padStart(2, '0')}. ${t}</span> <span class="text-white/20">44.1 kHz</span></li>`).join('')}
+                                </ul>
+                            </div>` : ''}
+                            
+                            <h4 class="text-xs font-black uppercase tracking-widest border-b border-white/10 pb-2 mb-4">Technical Specs</h4>
+                            <div class="grid grid-cols-2 gap-y-2 text-[10px] text-white/40 uppercase">
+                                <span>Resolution:</span> <span class="text-white">16-bit / 44.1 kHz</span>
+                                <span>Encoding:</span> <span class="text-white">PCM Linear</span>
+                                <span>Vault Grade:</span> <span class="text-white">Archival A+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            if (!product.description) {
+                try {
+                    const prompt = `Provide a very short audiophile analysis of the album "${product.album}" by "${product.artist}". Focus on why it sounds superior on CD. Max 60 words.`;
+                    const insight = await window.callGemini(prompt, "You are the CD5600 system. Technical, industrial, brief.");
+                    document.getElementById('ai-detail-insight').innerHTML = `<p class="text-sm leading-relaxed italic text-white/80">"${insight}"</p>`;
+                } catch (err) {
+                    const el = document.getElementById('ai-detail-insight');
+                    if(el) el.innerHTML = `<p class="text-xs text-white/30">Archives currently busy...</p>`;
+                }
+            }
+        }
+
+        window.askAI = async function() {
+            const input = document.getElementById('ai-input');
+            const history = document.getElementById('ai-chat-history');
+            const q = input.value.trim();
+            if (!q) return;
+            history.innerHTML += `<div class="p-3 text-right text-xs opacity-50 uppercase tracking-widest">USER: ${q}</div>`;
+            input.value = "";
+            const response = await window.callGemini(q, "CD5600 Curator. Technical, futuristic, catalog-aware.");
+            history.innerHTML += `<div class="p-4 bg-[#ffcc00]/10 border border-[#ffcc00]/20 rounded-sm">✨ ${response}</div>`;
+            history.scrollTop = history.scrollHeight;
+        }
+
+        window.toggleAI = function() {
+            document.getElementById('ai-sidebar').classList.toggle('translate-x-full');
+        }
+
+        window.showPage = function(id) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const n = document.getElementById(`nav-${id}`);
+            if (n) n.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.handleSearch = function() {
+            const query = document.getElementById('catalog-search').value.toLowerCase();
+            const grid = document.getElementById('catalog-grid');
+            
+            const filtered = fullCatalog.filter(p => 
+                p.artist.toLowerCase().includes(query) || 
+                p.album.toLowerCase().includes(query)
+            );
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="col-span-full py-20 text-center text-white/20 uppercase font-black tracking-widest">No matches found in vault</div>';
+            } else {
+                grid.innerHTML = filtered.map(p => window.cardHtml(p, false)).join('');
+            }
+        }
+
+        window.cardHtml = function(p, isC) {
+            const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
+            return `
+            <div class="cd-card glass p-4 rounded-sm group cursor-pointer ${isC ? 'min-w-[280px] md:min-w-[320px]' : ''}" onclick="showProductDetail(${p.id})">
+                <div class="relative mb-4 aspect-square overflow-hidden bg-white/5">
+                    <img src="${p.img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-all duration-700">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3">
+                        <button onclick="addToCart(event, ${p.id})" class="bg-[#ffcc00] text-black w-3/4 py-2 text-[10px] font-black uppercase">Add to Cart</button>
+                        <span class="text-white text-[10px] font-bold tracking-widest uppercase">Inspect Unit</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-bold text-xs uppercase truncate pr-2">${p.album}</h3>
+                        <p class="text-white/40 text-[10px] uppercase">${p.artist}</p>
+                    </div>
+                    <span class="text-[#ffcc00] font-bold text-xs">₾${p.price.toFixed(2)}</span>
+                </div>
+            </div>
+            `;
+        };
+
+        window.renderAll = function() {
+            const carousel = document.getElementById('home-carousel');
+            const grid = document.getElementById('catalog-grid');
+            const newArr = document.getElementById('new-arrivals-list');
+            const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
+
+            // If we have less than 5 items, fallback gracefully.
+            if (carousel && fullCatalog.length > 5) {
+                carousel.innerHTML = fullCatalog.slice(Math.max(fullCatalog.length - 10, 0), fullCatalog.length - 5).map(p => window.cardHtml(p, true)).join('');
+            }
+            if (grid) grid.innerHTML = fullCatalog.map(p => window.cardHtml(p, false)).join('');
+            
+            if (newArr && fullCatalog.length > 0) {
+                // Show most recent 4 items
+                newArr.innerHTML = fullCatalog.slice(0, 4).map(p => `
+                    <div class="glass p-8 flex flex-col sm:flex-row gap-8 items-center border-l-8 border-[#ffcc00] group cursor-pointer" onclick="showProductDetail(${p.id})">
+                        <div class="w-40 h-40 bg-white/10 flex-shrink-0 rounded-sm overflow-hidden">
+                            <img src="${p.img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-all duration-500">
+                        </div>
+                        <div>
+                            <span class="bg-[#ffcc00] text-black px-2 py-1 text-[10px] font-black uppercase">New Addition</span>
+                            <h3 class="text-2xl font-black italic mt-4 uppercase">${p.album}</h3>
+                            <p class="text-white/40 mt-2 mb-6 text-sm">Industrial Grade Master: ${p.artist}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.scrollCarousel = function(dir) {
+            document.getElementById('home-carousel').scrollBy({ left: dir * 350, behavior: 'smooth' });
+        }
+
+        // Initialize Call
+        window.onload = () => {
+            window.renderAll();
+            window.updateCartUI();
+        };
+    </script>
+</body>
+</html>
