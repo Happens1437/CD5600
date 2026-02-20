@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CD5600 | Premier High-Fidelity Shop</title>
+    <title>CD5600 | CD SHOP</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0' fill='%23ffcc00'/></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -26,26 +26,32 @@
 
         h1, h2, h3 { font-family: 'Syne', sans-serif; }
 
-        .gradient-mesh {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 20%, #1a1a00 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, #1a1a1a 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, #050505 0%, #000000 100%);
+        /* Scoped Hero Background */
+        .hero-bg-wrap {
+            position: relative;
+            background-image: url('https://mir-s3-cdn-cf.behance.net/project_modules/2800_webp/2b91b6192507573.65dcff03c31ac.jpg');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
+        .hero-bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.95) 100%);
+            z-index: 1;
+        }
+
         .bg-grid {
-            position: absolute; inset: 0; z-index: -1;
+            position: absolute; inset: 0; z-index: 2;
             background-size: 40px 40px;
             background-image: 
                 linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            mask-image: linear-gradient(to bottom, black 30%, transparent 80%);
-            -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 80%);
         }
 
         .glass {
-            background: var(--glass-bg);
+            background: rgba(10, 10, 10, 0.6);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
@@ -59,8 +65,8 @@
         .cd-card:hover {
             transform: translateY(-8px);
             border-color: var(--brand-yellow);
-            background: rgba(255, 204, 0, 0.05);
-            box-shadow: 0 10px 30px -10px rgba(255, 204, 0, 0.1);
+            background: rgba(255, 204, 0, 0.1);
+            box-shadow: 0 10px 30px -10px rgba(255, 204, 0, 0.2);
         }
 
         .nav-link {
@@ -100,9 +106,7 @@
         }
     </style>
 </head>
-<body class="custom-scrollbar">
-    <div class="gradient-mesh"></div>
-
+<body class="custom-scrollbar bg-[#0a0a0a]">
     <!-- UI Toast Notification -->
     <div id="toast" class="fixed bottom-10 right-10 z-[100] transform translate-y-24 opacity-0 transition-all duration-300 glass border-l-4 border-[#ffcc00] px-6 py-4 flex items-center gap-4 text-sm font-bold tracking-widest uppercase shadow-2xl pointer-events-none">
         <i class="fas fa-info-circle text-[#ffcc00]" id="toast-icon"></i>
@@ -165,97 +169,152 @@
 
     <main id="main-content">
         <!-- Home Section -->
-        <section id="home" class="page-section active pt-40 pb-20 px-6 relative">
-            <div class="bg-grid"></div> <!-- Industrial grid overlay -->
-            
-            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center mb-24">
-                <div class="relative z-10">
-                    <h1 class="hero-title text-6xl lg:text-8xl font-black mb-8 leading-tight italic uppercase drop-shadow-2xl">
-                        MUSIC YOU <br><span class="text-[#ffcc00]">CAN HOLD.</span>
-                    </h1>
-                    <p class="text-lg text-white/60 mb-10 max-w-lg leading-relaxed font-light">
-                        CD5600 operates on a highly curated vault. Experience the bit-perfect original master today, uncompressed and uncompromising.
-                    </p>
-                    <div class="flex flex-wrap gap-4 items-center">
-                        <button onclick="showPage('catalog')" class="bg-[#ffcc00] hover:bg-white text-black px-8 py-4 rounded-sm font-bold uppercase tracking-widest transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,204,0,0.3)]">
-                            Browse Collection
-                        </button>
-                        <button onclick="showPage('about')" class="bg-transparent border border-white/20 hover:border-white hover:bg-white/5 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-widest transition-all">
-                            Read About Us
-                        </button>
+        <section id="home" class="page-section active">
+            <!-- HERO WRAP WITH THE CUSTOM IMAGE BACKGROUND -->
+            <div class="hero-bg-wrap pt-40 pb-20 px-6 relative">
+                <div class="hero-bg-overlay"></div>
+                <div class="bg-grid"></div>
+
+                <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+                    <div class="relative">
+                        <h1 class="hero-title text-6xl lg:text-8xl font-black mb-8 leading-tight italic uppercase drop-shadow-2xl">
+                            MUSIC YOU <br><span class="text-[#ffcc00]">CAN HOLD.</span>
+                        </h1>
+                        <p class="text-lg text-white/60 mb-10 max-w-lg leading-relaxed font-light">
+                            CD5600 is a CD shop based in Tbilisi, Georgia, offering original European and American products to our community. We bring authentic albums from abroad directly to your collection.
+                        </p>
+                        <div class="flex flex-wrap gap-4 items-center">
+                            <button onclick="showPage('catalog')" class="bg-[#ffcc00] hover:bg-white text-black px-8 py-4 rounded-sm font-bold uppercase tracking-widest transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,204,0,0.3)]">
+                                Browse Collection
+                            </button>
+                            <button onclick="showPage('about')" class="bg-transparent border border-white/20 hover:border-white hover:bg-white/5 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-widest transition-all">
+                                Read About Us
+                            </button>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="relative flex justify-center items-center mt-12 lg:mt-0">
-                    <div class="w-72 h-72 md:w-96 md:h-96 rounded-full border-4 border-white/5 flex items-center justify-center overflow-hidden relative glow-effect transition-all duration-700 hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-[#ffcc00]/10 to-transparent"></div>
-                        <div class="w-64 h-64 md:w-80 md:h-80 rounded-full glass border-none flex items-center justify-center shadow-2xl animate-[spin_12s_linear_infinite] relative">
-                             <div class="absolute inset-0 rounded-full opacity-30" style="background: conic-gradient(from 180deg at 50% 50%, #ffcc00, #ffffff, #ffcc00, #222, #ffcc00);"></div>
-                             <div class="absolute inset-2 rounded-full border border-white/10"></div>
-                             <!-- Inner Hub -->
-                             <div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-black flex items-center justify-center border-4 border-[#ffcc00] shadow-[inset_0_0_20px_rgba(255,204,0,0.5)]">
-                                <svg viewBox="0 0 100 100" class="absolute w-16 h-16 opacity-50">
-                                    <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
-                                </svg>
-                                <span class="relative z-10 text-[14px] font-black text-[#ffcc00] leading-none text-center tracking-widest mt-0.5">CD<br>5600</span>
-                             </div>
+                    
+                    <div class="relative flex justify-center items-center mt-12 lg:mt-0 z-20">
+                        <!-- High-End Industrial Player Chassis -->
+                        <div class="relative w-[340px] h-[400px] md:w-[460px] md:h-[520px] bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.8)] p-4 flex flex-col items-center transition-all duration-700 hover:scale-[1.02] group">
+                            
+                            <!-- Chassis Hardware Screws -->
+                            <div class="absolute top-4 left-4 w-2.5 h-2.5 rounded-full bg-black shadow-inner border border-white/20 flex items-center justify-center"><div class="w-1 h-px bg-white/30 rotate-45"></div></div>
+                            <div class="absolute top-4 right-4 w-2.5 h-2.5 rounded-full bg-black shadow-inner border border-white/20 flex items-center justify-center"><div class="w-1 h-px bg-white/30 -rotate-45"></div></div>
+                            <div class="absolute bottom-4 left-4 w-2.5 h-2.5 rounded-full bg-black shadow-inner border border-white/20 flex items-center justify-center"><div class="w-1 h-px bg-white/30 rotate-12"></div></div>
+                            <div class="absolute bottom-4 right-4 w-2.5 h-2.5 rounded-full bg-black shadow-inner border border-white/20 flex items-center justify-center"><div class="w-1 h-px bg-white/30 rotate-90"></div></div>
+
+                            <!-- Brand Plate -->
+                            <div class="absolute top-4 left-1/2 -translate-x-1/2 text-[8px] font-mono text-white/40 tracking-[0.3em] uppercase border border-white/10 px-3 py-1 rounded bg-black shadow-inner">CD5600 Master Drive</div>
+
+                            <!-- Turntable Platter Base -->
+                            <div class="relative mt-8 w-[280px] h-[280px] md:w-[380px] md:h-[380px] rounded-full bg-black border-2 border-white/5 shadow-[0_10px_30px_rgba(0,0,0,1)_inset] flex items-center justify-center z-10">
+                                
+                                <!-- Spinning CD (With custom wear/tear texture) -->
+                                <div class="w-[96%] h-[96%] rounded-full glass border-none flex items-center justify-center shadow-2xl animate-[spin_12s_linear_infinite] relative overflow-hidden z-10">
+                                     <!-- Base Reflection -->
+                                     <div class="absolute inset-0 rounded-full opacity-30" style="background: conic-gradient(from 180deg at 50% 50%, #ffcc00, #ffffff, #ffcc00, #222, #ffcc00);"></div>
+                                     
+                                     <!-- Dust & Grain Overlay -->
+                                     <div class="absolute inset-0 rounded-full opacity-50 mix-blend-overlay pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.5%22/%3E%3C/svg%3E');"></div>
+                                     
+                                     <!-- Surface Scratches & Wear -->
+                                     <div class="absolute inset-0 rounded-full mix-blend-screen pointer-events-none opacity-70" style="background: 
+                                        linear-gradient(25deg, transparent 45%, rgba(255,255,255,0.15) 45.2%, transparent 45.5%),
+                                        linear-gradient(-65deg, transparent 30%, rgba(255,255,255,0.1) 30.1%, transparent 30.4%),
+                                        linear-gradient(115deg, transparent 70%, rgba(255,255,255,0.2) 70.3%, transparent 70.6%),
+                                        linear-gradient(80deg, transparent 15%, rgba(255,255,255,0.08) 15.1%, transparent 15.3%),
+                                        radial-gradient(circle at 40% 80%, rgba(255,255,255,0.1) 0%, transparent 25%);">
+                                     </div>
+                                     
+                                     <!-- Fingerprints / Smudges -->
+                                     <div class="absolute inset-0 rounded-full mix-blend-multiply pointer-events-none opacity-50" style="background: 
+                                        radial-gradient(ellipse at 70% 30%, rgba(0,0,0,0.2) 0%, transparent 30%),
+                                        radial-gradient(ellipse at 20% 50%, rgba(0,0,0,0.15) 0%, transparent 40%),
+                                        radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0.2) 0%, transparent 25%);">
+                                     </div>
+
+                                     <!-- Data Grooves -->
+                                     <div class="absolute inset-2 rounded-full border border-white/10 pointer-events-none"></div>
+                                     <div class="absolute inset-6 rounded-full border border-white/5 pointer-events-none"></div>
+                                     <div class="absolute inset-10 rounded-full border border-white/5 pointer-events-none"></div>
+
+                                     <!-- Inner Hub -->
+                                     <div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-24 md:h-24 rounded-full bg-black flex items-center justify-center border-4 border-[#ffcc00] shadow-[inset_0_0_20px_rgba(255,204,0,0.5)] z-10">
+                                        <svg viewBox="0 0 100 100" class="absolute w-12 h-12 md:w-16 md:h-16 opacity-50">
+                                            <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                                        </svg>
+                                        <span class="relative z-10 text-[12px] md:text-[14px] font-black text-[#ffcc00] leading-none text-center tracking-widest mt-0.5">CD<br>5600</span>
+                                     </div>
+                                </div>
+
+                                <!-- Center Spindle -->
+                                <div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-gradient-to-br from-gray-200 to-gray-500 shadow-[0_2px_10px_rgba(0,0,0,1)] border border-black z-30"></div>
+                            </div>
+
+                            <!-- Mechanical Tonearm / Laser Assembly -->
+                            <div class="absolute top-12 right-6 md:top-16 md:right-8 z-30 drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] pointer-events-none">
+                                <!-- Pivot Base -->
+                                <div class="w-10 h-10 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-[#333] to-[#0a0a0a] border border-white/20 flex items-center justify-center relative z-20 shadow-xl">
+                                    <div class="w-5 h-5 md:w-7 md:h-7 rounded-full bg-gradient-to-br from-gray-500 to-gray-800 border border-black shadow-inner"></div>
+                                </div>
+                                <!-- Silver Arm -->
+                                <div class="absolute top-5 left-1/2 -translate-x-1/2 w-2 md:w-2.5 h-[160px] md:h-[220px] bg-gradient-to-r from-gray-400 via-white to-gray-500 rounded-full origin-top transform rotate-[35deg] shadow-2xl z-10">
+                                    <!-- Laser Head / Stylus -->
+                                    <div class="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-5 h-12 md:w-6 md:h-14 bg-gradient-to-b from-[#222] to-black border border-white/20 rounded-sm transform rotate-[-20deg] origin-top shadow-2xl">
+                                        <div class="absolute bottom-2 right-full w-2 h-4 bg-red-500/80 rounded-l-sm border-y border-l border-red-400/50 shadow-[0_0_10px_rgba(255,0,0,0.8)] animate-pulse"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Controls & Display Panel -->
+                            <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end z-20">
+                                <!-- Hardware Buttons -->
+                                <div class="flex gap-2 md:gap-3">
+                                    <button class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-b from-[#222] to-[#111] border border-white/10 flex items-center justify-center text-[#ffcc00] hover:bg-[#ffcc00] hover:text-black hover:shadow-[0_0_15px_rgba(255,204,0,0.5)] transition-all active:scale-95 shadow-[0_5px_10px_rgba(0,0,0,0.5)]">
+                                        <i class="fas fa-play text-xs md:text-sm ml-1"></i>
+                                    </button>
+                                    <button class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-b from-[#222] to-[#111] border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-all active:scale-95 shadow-[0_5px_10px_rgba(0,0,0,0.5)]">
+                                        <i class="fas fa-pause text-xs md:text-sm"></i>
+                                    </button>
+                                    <button class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-b from-[#222] to-[#111] border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-all active:scale-95 shadow-[0_5px_10px_rgba(0,0,0,0.5)]">
+                                        <i class="fas fa-stop text-xs md:text-sm"></i>
+                                    </button>
+                                </div>
+                                <!-- Digital Screen -->
+                                <div class="px-3 py-1.5 md:px-4 md:py-2 bg-black border border-white/10 rounded shadow-[inset_0_2px_10px_rgba(0,0,0,1)] flex flex-col items-end">
+                                    <span class="text-[#ffcc00] font-mono text-[8px] md:text-[10px] tracking-widest opacity-80 uppercase">Output: PCM</span>
+                                    <span class="text-white font-mono text-[10px] md:text-xs tracking-widest mt-0.5 md:mt-1">TRK 01 <span class="text-white/50 ml-2 animate-pulse">00:00:00</span></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Features Banner -->
-            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-24 border-y border-white/10 py-10 bg-black/20 backdrop-blur-sm">
-                <div class="flex items-center gap-6 px-6">
-                    <div class="w-12 h-12 rounded-full bg-[#ffcc00]/10 flex items-center justify-center border border-[#ffcc00]/30 shrink-0">
-                        <i class="fas fa-wave-square text-xl text-[#ffcc00]"></i>
+            <!-- Home Page Content (Standard Dark Background) -->
+            <div class="px-6 py-20 relative bg-[#0a0a0a]">
+                <div class="max-w-7xl mx-auto py-10">
+                    <div class="flex justify-between items-center mb-12">
+                        <h2 class="text-3xl font-black italic uppercase">Highlighted <span class="text-[#ffcc00]">Albums</span></h2>
+                        <div class="flex gap-4">
+                            <button onclick="scrollCarousel(-1)" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffcc00] hover:border-[#ffcc00] hover:text-black transition-all">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button onclick="scrollCarousel(1)" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffcc00] hover:border-[#ffcc00] hover:text-black transition-all">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <h4 class="font-bold uppercase text-sm tracking-widest mb-1">Lossless Fidelity</h4>
-                        <p class="text-white/40 text-[11px] uppercase leading-relaxed">1.41 Mbps Bit-Perfect Audio. No compression artifacts.</p>
-                    </div>
+                    <div id="home-carousel" class="carousel-container flex gap-6 overflow-x-auto pb-8 pt-4 -mt-4 px-4 -mx-4"></div>
                 </div>
-                <div class="flex items-center gap-6 px-6 md:border-l border-white/10">
-                    <div class="w-12 h-12 rounded-full bg-[#ffcc00]/10 flex items-center justify-center border border-[#ffcc00]/30 shrink-0">
-                        <i class="fas fa-shield-alt text-xl text-[#ffcc00]"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold uppercase text-sm tracking-widest mb-1">Archival Grade</h4>
-                        <p class="text-white/40 text-[11px] uppercase leading-relaxed">Curated physical masters tested for data degradation.</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-6 px-6 md:border-l border-white/10">
-                    <div class="w-12 h-12 rounded-full bg-[#ffcc00]/10 flex items-center justify-center border border-[#ffcc00]/30 shrink-0">
-                        <i class="fas fa-globe text-xl text-[#ffcc00]"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold uppercase text-sm tracking-widest mb-1">Global Vault</h4>
-                        <p class="text-white/40 text-[11px] uppercase leading-relaxed">Secure shipping worldwide in anti-static industrial packaging.</p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="max-w-7xl mx-auto py-10">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-3xl font-black italic uppercase">Highlighted <span class="text-[#ffcc00]">Albums</span></h2>
-                    <div class="flex gap-4">
-                        <button onclick="scrollCarousel(-1)" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffcc00] hover:border-[#ffcc00] hover:text-black transition-all">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button onclick="scrollCarousel(1)" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffcc00] hover:border-[#ffcc00] hover:text-black transition-all">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
+                <!-- New Additions -->
+                <div class="max-w-7xl mx-auto py-10 mt-10 border-t border-white/10">
+                    <div class="flex justify-between items-center mb-12">
+                        <h2 class="text-3xl font-black italic uppercase">New <span class="text-[#ffcc00]">Additions</span></h2>
                     </div>
+                    <div id="new-arrivals-list" class="grid md:grid-cols-2 gap-8"></div>
                 </div>
-                <div id="home-carousel" class="carousel-container flex gap-6 overflow-x-auto pb-8 pt-4 -mt-4 px-4 -mx-4"></div>
-            </div>
-
-            <!-- New Additions (Moved to Home) -->
-            <div class="max-w-7xl mx-auto py-10 mt-10 border-t border-white/10">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-3xl font-black italic uppercase">New <span class="text-[#ffcc00]">Additions</span></h2>
-                </div>
-                <div id="new-arrivals-list" class="grid md:grid-cols-2 gap-8"></div>
             </div>
         </section>
 
@@ -271,7 +330,6 @@
                             <div class="relative">
                                 <select id="filter-artist" onchange="applyFilters()" class="bg-white/5 border border-white/10 rounded-sm pl-4 pr-10 py-3 text-sm focus:border-[#ffcc00] outline-none text-white appearance-none cursor-pointer">
                                     <option value="all" class="bg-[#0a0a0a]">All Artists</option>
-                                    <!-- Options populated dynamically -->
                                 </select>
                                 <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none text-xs"></i>
                             </div>
@@ -373,25 +431,27 @@
         </section>
     </main>
 
-    <footer class="py-20 px-6 border-t border-white/5 mt-20">
+    <footer class="py-16 px-6 border-t border-white/10 mt-20 bg-[#0a0a0a]">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
-                <div class="w-8 h-8 relative">
-                    <svg viewBox="0 0 100 100" class="w-full h-full">
-                        <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
-                    </svg>
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
+                    <div class="w-8 h-8 relative">
+                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                            <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                        </svg>
+                    </div>
+                    <span class="font-bold tracking-tighter uppercase text-xl text-white">CD5600</span>
                 </div>
-                <span class="font-bold tracking-tighter uppercase text-xl">CD5600</span>
             </div>
-            <div class="flex space-x-8 text-xs font-bold uppercase tracking-widest text-white/40">
+            <div class="flex flex-wrap gap-8 text-xs font-bold uppercase tracking-widest text-white/50">
                 <a href="#" class="hover:text-[#ffcc00] transition-colors">Privacy</a>
                 <a href="#" class="hover:text-[#ffcc00] transition-colors">Shipping</a>
                 <a href="#" class="hover:text-[#ffcc00] transition-colors">Returns</a>
                 <a href="#" class="hover:text-[#ffcc00] transition-colors">Contact</a>
             </div>
         </div>
-        <div class="mt-12 text-center text-[10px] text-white/20 uppercase tracking-[0.4em]">
-            © 2026 CD5600 Industrial High-Fidelity. All Rights Reserved.
+        <div class="mt-12 text-center text-[10px] text-white/30 uppercase tracking-[0.4em]">
+            © 2026 CD5600. All Rights Reserved.
         </div>
     </footer>
 
@@ -401,14 +461,6 @@
         
         // Full hardcoded catalog with descriptions and verified Wikipedia/Discogs Images
         const fullCatalog = [
-            { 
-                id: 100, 
-                artist: 'Rolling Stones', 
-                album: 'Tattoo You', 
-                price: 40.00, 
-                img: 'https://upload.wikimedia.org/wikipedia/en/1/16/TattooYou81.jpg',
-                description: 'Classic rock masterpiece featuring "Start Me Up". High-fidelity CD pressing capturing the raw energy of the Stones.' 
-            },
             { 
                 id: 104, 
                 artist: 'Pink Floyd', 
@@ -520,6 +572,14 @@
                 price: 40.00, 
                 img: 'https://i.discogs.com/ECTi5kla4dlzslpWD_1GTlfYffLm82SxkH_iFfLc5GE/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMjQ4/Mzc3LTE0OTQwOTE2/NjktMTEyMS5qcGVn.jpeg', 
                 description: 'Sweeping orchestral arrangements and jazz ensembles captured in pristine fidelity.' 
+            },
+            { 
+                id: 100, 
+                artist: 'Rolling Stones', 
+                album: 'Tattoo You', 
+                price: 40.00, 
+                img: 'https://upload.wikimedia.org/wikipedia/en/1/16/TattooYou81.jpg',
+                description: 'Classic rock masterpiece featuring "Start Me Up". High-fidelity CD pressing capturing the raw energy of the Stones.' 
             },
             { 
                 id: 150, 
@@ -1098,10 +1158,7 @@
         window.populateFilters = function() {
             const artistSelect = document.getElementById('filter-artist');
             if (!artistSelect) return;
-            
-            // Extract unique artists and sort alphabetically
             const uniqueArtists = [...new Set(fullCatalog.map(item => item.artist))].sort();
-            
             uniqueArtists.forEach(artist => {
                 const option = document.createElement('option');
                 option.value = artist;
@@ -1116,24 +1173,17 @@
             const selectedArtist = document.getElementById('filter-artist').value;
             const sortOrder = document.getElementById('sort-price').value;
             const grid = document.getElementById('catalog-grid');
-            
             if (!grid) return;
-
-            // 1. Filter by Search Query & Artist
             let filtered = fullCatalog.filter(p => {
                 const matchesSearch = p.artist.toLowerCase().includes(query) || p.album.toLowerCase().includes(query);
                 const matchesArtist = selectedArtist === 'all' || p.artist === selectedArtist;
                 return matchesSearch && matchesArtist;
             });
-            
-            // 2. Sort by Price
             if (sortOrder === 'low-high') {
                 filtered.sort((a, b) => a.price - b.price);
             } else if (sortOrder === 'high-low') {
                 filtered.sort((a, b) => b.price - a.price);
             }
-            
-            // Render Result
             if (filtered.length === 0) {
                 grid.innerHTML = '<div class="col-span-full py-20 text-center text-white/20 uppercase font-black tracking-widest">No matches found in vault</div>';
             } else {
@@ -1149,12 +1199,12 @@
                     <img src="${p.img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-all duration-700">
                     <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3">
                         <button onclick="addToCart(event, ${p.id})" class="bg-[#ffcc00] text-black w-3/4 py-2 text-[10px] font-black uppercase">Add to Cart</button>
-                        <span class="text-white text-[10px] font-bold tracking-widest uppercase">Inspect Unit</span>
+                        <span class="text-white text-[10px] font-bold tracking-widest uppercase">View Product</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-start">
                     <div class="flex-1 min-w-0">
-                        <h3 class="font-bold text-xs uppercase truncate pr-2">${p.album}</h3>
+                        <h3 class="font-bold text-xs uppercase truncate pr-2 text-white">${p.album}</h3>
                         <p class="text-white/40 text-[10px] uppercase">${p.artist}</p>
                     </div>
                     <span class="text-[#ffcc00] font-bold text-xs">₾${p.price.toFixed(2)}</span>
@@ -1166,29 +1216,20 @@
         window.renderAll = function() {
             const carousel = document.getElementById('home-carousel');
             const newArr = document.getElementById('new-arrivals-list');
-            const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
-
-            // Shuffle catalog to make Vault Highlights and New Additions dynamic and random every time
             const randomCatalog = [...fullCatalog].sort(() => 0.5 - Math.random());
-
             if (carousel) {
-                // Show a random selection in the highlights carousel
                 carousel.innerHTML = randomCatalog.slice(0, 6).map(p => window.cardHtml(p, true)).join('');
             }
-            
-            // Apply current filters to render the initial catalog grid
             window.applyFilters();
-            
             if (newArr && fullCatalog.length > 0) {
-                // Show 4 notable random recent entries in New Additions
                 newArr.innerHTML = randomCatalog.slice(6, 10).map(p => `
                     <div class="glass p-8 flex flex-col sm:flex-row gap-8 items-center border-l-8 border-[#ffcc00] group cursor-pointer" onclick="showProductDetail(${p.id})">
                         <div class="w-40 h-40 bg-white/10 flex-shrink-0 rounded-sm overflow-hidden">
-                            <img src="${p.img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-all duration-500">
+                            <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80'" class="w-full h-full object-cover transition-all duration-500">
                         </div>
                         <div>
-                            <span class="bg-[#ffcc00] text-black px-2 py-1 text-[10px] font-black uppercase">Archival Edition</span>
-                            <h3 class="text-2xl font-black italic mt-4 uppercase">${p.album}</h3>
+                            <span class="bg-[#ffcc00] text-black px-2 py-1 text-[10px] font-black uppercase">Newly Added</span>
+                            <h3 class="text-2xl font-black italic mt-4 uppercase text-white">${p.album}</h3>
                             <p class="text-white/40 mt-2 mb-6 text-sm">Industrial Grade Master: ${p.artist}</p>
                         </div>
                     </div>
@@ -1200,64 +1241,22 @@
             document.getElementById('home-carousel').scrollBy({ left: dir * 350, behavior: 'smooth' });
         }
 
-        // ----------------------------------------------------------------------
-        // INSTAGRAM POSTS DATA
-        // Populated with aesthetic picks from your catalog to simulate the feed.
-        // ----------------------------------------------------------------------
         const instagramPosts = [
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.75761-15/503987529_17844996912498405_2388812368448295299_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=MzY0NzIzMDcwMjMxMDc0MTIyNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0MDB4MTQwMC5zZHIuQzMifQ%3D%3D&_nc_ohc=UHnAQk-PjOQQ7kNvwGP3Y7u&_nc_oc=Adn5WUvVNoYteR6D9BfVk1Hw43-Mp5awzSZlVztDrlnlTo7ofwDJK4WNBv_O66JT-Ak&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=YZvhmsXg0MsUnP2FDZ7E4w&oh=00_AfsZaHrX1VDndos1Ofh6KjR_nnqtDNK3jvIrvNonnGAZ5w&oe=699D7A41", 
-                likes: 142, comments: 8 
-            },
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.75761-15/506293829_17847151443498405_6585257884382635914_n.jpg?stp=dst-jpg_e35_s750x750_sh0.08_tt6&_nc_cat=105&ig_cache_key=MzY1NDczNTc1MTE4MzI1NzMxMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTA4MC5zZHIuQzMifQ%3D%3D&_nc_ohc=hAANXlJ2s68Q7kNvwHsdJd3&_nc_oc=AdmObM6dH7c8BmR3CWt0mASg4i55oz-gUel9DOwaJYNODbpOwzwEX6num_sPp35K12I&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=oOTBajhonjWzStozhKYgFA&oh=00_AfujRObf20VA8WQEnjSnogAYF7uLXVeBDJpqqTRnw5W82w&oe=699D78BF", 
-                likes: 89, comments: 3 
-            },
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/503467548_17850090549498405_1135554960457912479_n.webp?_nc_cat=110&ig_cache_key=MzY2OTQ5MzQxMDY0NjYwODk3MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=EJDudGYdlr4Q7kNvwG5Xv5G&_nc_oc=Adlv0TuUD1JxLJq_eF-PitUiK_GwRMdb2s_nJBMxGsO5Pb6e1T0XGnWtV9hfdfAOAFY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=YZvhmsXg0MsUnP2FDZ7E4w&oh=00_Aft4fJoxw8Zo3NjO3qtldGwUzCyxPjiJ-yGrn_8eZb6WPQ&oe=699DAD19", 
-                likes: 215, comments: 14 
-            },
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/514662905_17850093921498405_984266900009713654_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=MzY2OTUwODk3NzcyMTk5NTM3NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzMifQ%3D%3D&_nc_ohc=QgWTJRs_r_EQ7kNvwGyzjZJ&_nc_oc=AdkabEbhP4cTuqYsv-TTc0DEARFASg4JXz5Njg-BkCMpy5WV9pwzFHw4CaiA6t-DoIU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_Aft7630DVo_8wADMaTbHtTLwIpc7ZSYg3JCUsRLAx1gZow&oe=699D91ED", 
-                likes: 304, comments: 22 
-            },
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/526744379_17853531912498405_6333513248661084237_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=MzY4OTA2MzUzNzMxMDQzMDMyNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=nI8050HfRN8Q7kNvwHovdPG&_nc_oc=Adkbmk-pUEDLYsbDSthFUOnQOf4LB9dncxz0nLOD852O4lTlj2cFm_bj6cBLRzrD_E4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_AfvFh8be1out8xcGlSDIslV--U_fvEy4fZEvVL2K-C0DRQ&oe=699D93B8", 
-                likes: 120, comments: 5 
-            },
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/515444698_17850095007498405_6130634836618691552_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=MzY2OTUxMzI5OTUwNzYzMjczNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzMifQ%3D%3D&_nc_ohc=WYiCNjc-el4Q7kNvwEhZpxE&_nc_oc=Adn6Esx9fQJNMYboQ5Us2LhgN9z_6-xbizeGmP282jaeueCnqWWlGW9C3VByygufZic&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_Aft1JVeL54h3XKpI1HX_X-Jpk0deJgyGEqTDwjD6gdHsLg&oe=699D942B", 
-                likes: 95, comments: 2 
-            },
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/523234648_17852515167498405_8186943714255175853_n.webp?_nc_cat=111&ig_cache_key=MzY4MzI1ODgzMDU5MTQ4MzU5OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=Hw8TpAydxFAQ7kNvwF1seic&_nc_oc=AdlpxaQs-Q88ZTwVQI_MPja4OhooNBTe86OhXv-hiIbyCZ6VY-sdC1Oz5WkJnRZXVAE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_AfuD8mQJX5qx8bXvIhaswdP2rEXXVvX5mQ4FBkDgaZCTBg&oe=699D82D5", 
-                likes: 412, comments: 31 
-            },
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-2.fna.fbcdn.net/v/t51.82787-15/516785347_17850095142498405_1738140964918221688_n.jpg?stp=dst-jpg_e35_p750x750_sh0.08_tt6&_nc_cat=109&ig_cache_key=MzY2OTUxNDUzMDUzNTg0OTc3OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzMifQ%3D%3D&_nc_ohc=F5wJ0HHCCYYQ7kNvwFZGx3E&_nc_oc=AdlQ0Udih3rxloKbpn4aP6PD1GXaxGcr40X_pa8jKpm0hVkXrMDu0rV1nXW-ERfz43I&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-2.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_AftsZkILcl-tiUT8T4_5THlz28z-FwBuPChvQtMEcj3kTg&oe=699D9FF9", 
-                likes: 178, comments: 9 
-            },
-            { 
-                url: "https://www.instagram.com/cd.5600/", 
-                img: "https://instagram.ftbs3-2.fna.fbcdn.net/v/t51.82787-15/529569444_17854638609498405_5511773162666903214_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=103&ig_cache_key=MzY5NTUwMzA2OTA2ODQ4OTkwNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=oHQQjtiJlWMQ7kNvwHnF34t&_nc_oc=AdmRn79_bDk7xn9S3sKcRixG5oMFW5fDUFIi_1qvA0pvkllz_DtlKZKF_7u7E_BZSFs&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-2.fna&_nc_gid=YZvhmsXg0MsUnP2FDZ7E4w&oh=00_AfvLHi0kjdBkX3COJkpiUfwaiv0_zKm5GG5FmTYDVuVBBQ&oe=699D8C97", 
-                likes: 256, comments: 18 
-            }
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.75761-15/503987529_17844996912498405_2388812368448295299_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=MzY0NzIzMDcwMjMxMDc0MTIyNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0MDB4MTQwMC5zZHIuQzMifQ%3D%3D&_nc_ohc=UHnAQk-PjOQQ7kNvwGP3Y7u&_nc_oc=Adn5WUvVNoYteR6D9BfVk1Hw43-Mp5awzSZlVztDrlnlTo7ofwDJK4WNBv_O66JT-Ak&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=YZvhmsXg0MsUnP2FDZ7E4w&oh=00_AfsZaHrX1VDndos1Ofh6KjR_nnqtDNK3jvIrvNonnGAZ5w&oe=699D7A41", likes: 142, comments: 8 },
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.75761-15/506293829_17847151443498405_6585257884382635914_n.jpg?stp=dst-jpg_e35_s750x750_sh0.08_tt6&_nc_cat=105&ig_cache_key=MzY1NDczNTc1MTE4MzI1NzMxMw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTA4MC5zZHIuQzMifQ%3D%3D&_nc_ohc=hAANXlJ2s68Q7kNvwHsdJd3&_nc_oc=AdmObM6dH7c8BmR3CWt0mASg4i55oz-gUel9DOwaJYNODbpOwzwEX6num_sPp35K12I&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=oOTBajhonjWzStozhKYgFA&oh=00_AfujRObf20VA8WQEnjSnogAYF7uLXVeBDJpqqTRnw5W82w&oe=699D78BF", likes: 89, comments: 3 },
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/503467548_17850090549498405_1135554960457912479_n.webp?_nc_cat=110&ig_cache_key=MzY2OTQ5MzQxMDY0NjYwODk3MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=EJDudGYdlr4Q7kNvwG5Xv5G&_nc_oc=Adlv0TuUD1JxLJq_eF-PitUiK_GwRMdb2s_nJBMxGsO5Pb6e1T0XGnWtV9hfdfAOAFY&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=YZvhmsXg0MsUnP2FDZ7E4w&oh=00_Aft4fJoxw8Zo3NjO3qtldGwUzCyxPjiJ-yGrn_8eZb6WPQ&oe=699DAD19", likes: 215, comments: 14 },
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/514662905_17850093921498405_984266900009713654_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=MzY2OTUwODk3NzcyMTk5NTM3NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzMifQ%3D%3D&_nc_ohc=QgWTJRs_r_EQ7kNvwGyzjZJ&_nc_oc=AdkabEbhP4cTuqYsv-TTc0DEARFASg4JXz5Njg-BkCMpy5WV9pwzFHw4CaiA6t-DoIU&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_Aft7630DVo_8wADMaTbHtTLwIpc7ZSYg3JCUsRLAx1gZow&oe=699D91ED", likes: 304, comments: 22 },
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/526744379_17853531912498405_6333513248661084237_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=MzY4OTA2MzUzNzMxMDQzMDMyNg%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=nI8050HfRN8Q7kNvwHovdPG&_nc_oc=Adkbmk-pUEDLYsbDSthFUOnQOf4LB9dncxz0nLOD852O4lTlj2cFm_bj6cBLRzrD_E4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_AfvFh8be1out8xcGlSDIslV--U_fvEy4fZEvVL2K-C0DRQ&oe=699D93B8", likes: 120, comments: 5 },
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/515444698_17850095007498405_6130634836618691552_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=105&ig_cache_key=MzY2OTUxMzI5OTUwNzYzMjczNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzMifQ%3D%3D&_nc_ohc=WYiCNjc-el4Q7kNvwEhZpxE&_nc_oc=Adn6Esx9fQJNMYboQ5Us2LhgN9z_6-xbizeGmP282jaeueCnqWWlGW9C3VByygufZic&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_Aft1JVeL54h3XKpI1HX_X-Jpk0deJgyGEqTDwjD6gdHsLg&oe=699D942B", likes: 95, comments: 2 },
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-1.fna.fbcdn.net/v/t51.82787-15/523234648_17852515167498405_8186943714255175853_n.webp?_nc_cat=111&ig_cache_key=MzY4MzI1ODgzMDU5MTQ4MzU5OQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=Hw8TpAydxFAQ7kNvwF1seic&_nc_oc=AdlpxaQs-Q88ZTwVQI_MPja4OhooNBTe86OhXv-hiIbyCZ6VY-sdC1Oz5WkJnRZXVAE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-1.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_AfuD8mQJX5qx8bXvIhaswdP2rEXXVvX5mQ4FBkDgaZCTBg&oe=699D82D5", likes: 412, comments: 31 },
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-2.fna.fbcdn.net/v/t51.82787-15/516785347_17850095142498405_1738140964918221688_n.jpg?stp=dst-jpg_e35_p750x750_sh0.08_tt6&_nc_cat=109&ig_cache_key=MzY2OTUxNDUzMDUzNTg0OTc3OA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTkyMC5zZHIuQzMifQ%3D%3D&_nc_ohc=F5wJ0HHCCYYQ7kNvwFZGx3E&_nc_oc=AdlQ0Udih3rxloKbpn4aP6PD1GXaxGcr40X_pa8jKpm0hVkXrMDu0rV1nXW-ERfz43I&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-2.fna&_nc_gid=IUk87LmpUZpqkFlRMMbQAA&oh=00_AftsZkILcl-tiUT8T4_5THlz28z-FwBuPChvQtMEcj3kTg&oe=699D9FF9", likes: 178, comments: 9 },
+            { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-2.fna.fbcdn.net/v/t51.82787-15/529569444_17854638609498405_5511773162666903214_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=103&ig_cache_key=MzY5NTUwMzA2OTA2ODQ4OTkwNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=oHQQjtiJlWMQ7kNvwHnF34t&_nc_oc=AdmRn79_bDk7xn9S3sKcRixG5oMFW5fDUFIi_1qvA0pvkllz_DtlKZKF_7u7E_BZSFs&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-2.fna&_nc_gid=YZvhmsXg0MsUnP2FDZ7E4w&oh=00_AfvLHi0kjdBkX3COJkpiUfwaiv0_zKm5GG5FmTYDVuVBBQ&oe=699D8C97", likes: 256, comments: 18 }
         ];
 
         window.renderSocials = function() {
             const grid = document.getElementById('insta-grid');
             if (!grid) return;
-            
             const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
-
             grid.innerHTML = instagramPosts.map(post => `
                 <a href="${post.url}" target="_blank" class="aspect-square bg-white/5 relative group block overflow-hidden cursor-pointer border border-transparent hover:border-[#ffcc00] transition-colors">
                     <img src="${post.img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -1269,7 +1268,6 @@
             `).join('');
         }
 
-        // Initialize Call
         window.onload = () => {
             window.populateFilters();
             window.renderAll();
