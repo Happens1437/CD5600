@@ -1,1 +1,29 @@
-Sitemap: https://www.google.com/url?sa=E&source=gmail&q=https://www.cd5600.shop/sitemap.xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://www.cd5600.shop/</loc>
+    <lastmod>2026-03-10</lastmod>
+    <priority>1.00</priority>
+  </url>
+
+  <url>
+    <loc>https://www.cd5600.shop/shop</loc>
+    <lastmod>2026-03-10</lastmod>
+    <priority>0.90</priority>
+  </url>
+
+  <url>
+    <loc>https://www.cd5600.shop/about</loc>
+    <lastmod>2026-03-10</lastmod>
+    <priority>0.70</priority>
+  </url>
+
+  <url>
+    <loc>https://www.cd5600.shop/contact</loc>
+    <lastmod>2026-03-10</lastmod>
+    <priority>0.60</priority>
+  </url>
+
+</urlset>
