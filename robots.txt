@@ -1,1 +1,3 @@
 User-agent: * Allow: /
+
+Sitemap: https://www.cd5600.shop/sitemap.xml
