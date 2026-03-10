@@ -878,7 +878,7 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
         window.chatMessages = [];
 
         async function fetchGeminiWithRetry(payload, retries = 5) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             let delay = 1000;
             
             for (let i = 0; i < retries; i++) {
@@ -992,5 +992,6 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
     </script>
 </body>
 </html>
+
 
 
