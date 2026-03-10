@@ -370,7 +370,7 @@ window.askAI = async function() {
         
         // Pass compact catalog as context to Gemini
         const compactCatalog = fullCatalog.map(c => ({ id: c.id, artist: c.artist, album: c.album, price: c.price }));
-        const systemPrompt = `You are the CDSHOP Assistant, a helpful, industrial audiophile assistant located on the website for a CD shop in Tbilisi, Georgia. 
+        const systemPrompt = `You are the CDSHOP Assistant, a helpful, industrial assistant located on the website for a CD shop in Tbilisi, Georgia. 
         You act as the primary customer support and product recommendation engine.
         
         KNOWLEDGE BASE:
