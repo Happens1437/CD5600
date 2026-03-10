@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CD5600 | Premier High-Fidelity</title>
     
-    <!-- SEO Meta Description (Fixes the Semrush/Google warning) -->
+    <!-- SEO Meta Description -->
     <meta name="description" content="CD5600 is a premier CD shop in Tbilisi, Georgia, offering highly curated, original European and American albums. Experience high-fidelity physical music.">
     
-    <!-- Standard Favicons (Fixes the missing icon in Google Search) -->
+    <!-- Standard Favicons -->
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -105,7 +105,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        #ai-sidebar, #mobile-menu {
+        #mobile-menu {
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
@@ -128,9 +128,41 @@
 </head>
 <body class="custom-scrollbar bg-[#0a0a0a]">
     <!-- UI Toast Notification -->
-    <div id="toast" class="fixed bottom-10 right-10 z-[100] transform translate-y-24 opacity-0 transition-all duration-300 glass border-l-4 border-[#ffcc00] px-6 py-4 flex items-center gap-4 text-sm font-bold tracking-widest uppercase shadow-2xl pointer-events-none">
+    <div id="toast" class="fixed bottom-10 left-10 z-[100] transform translate-y-24 opacity-0 transition-all duration-300 glass border-l-4 border-[#ffcc00] px-6 py-4 flex items-center gap-4 text-sm font-bold tracking-widest uppercase shadow-2xl pointer-events-none">
         <i class="fas fa-info-circle text-[#ffcc00]" id="toast-icon"></i>
         <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- AI Chatbot Floating Button -->
+    <button onclick="toggleAI()" class="fixed bottom-6 right-6 z-[90] w-14 h-14 rounded-full bg-[#ffcc00] text-black flex items-center justify-center text-xl shadow-[0_0_20px_rgba(255,204,0,0.4)] hover:scale-110 transition-transform">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+
+    <!-- AI Chatbot Widget -->
+    <div id="ai-chat-widget" class="fixed bottom-24 right-6 z-[90] w-[calc(100vw-3rem)] sm:w-[380px] h-[500px] max-h-[70vh] glass rounded-xl border border-[#ffcc00]/30 flex flex-col overflow-hidden shadow-2xl transition-all duration-300 transform scale-0 opacity-0 origin-bottom-right pointer-events-none">
+        <div class="p-4 border-b border-white/10 flex justify-between items-center bg-black/80">
+            <h3 class="font-black italic uppercase text-sm tracking-widest text-[#ffcc00] flex items-center gap-2">
+                <i class="fas fa-sparkles"></i> AI Sonic Curator
+            </h3>
+            <button onclick="toggleAI()" class="text-white/40 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div id="ai-chat-history" class="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar text-sm bg-[#0a0a0a]/80 backdrop-blur-md">
+            <div class="p-4 bg-[#ffcc00]/10 border border-[#ffcc00]/20 rounded-lg text-white/90">
+                Hello. I am the CD5600 Assistant. I can help you find specific albums, explain our high-fidelity process, or answer questions about shipping and returns. What are you hunting for?
+            </div>
+        </div>
+        <div class="p-4 bg-black/90 border-t border-white/10">
+            <div class="relative">
+                <input id="ai-input" type="text" placeholder="Ask a question..." 
+                    class="w-full bg-white/5 border border-white/20 rounded-full px-5 py-3 pr-12 text-xs focus:border-[#ffcc00] outline-none transition-colors"
+                    onkeypress="if(event.key === 'Enter') askAI()">
+                <button onclick="askAI()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-[#ffcc00] text-black hover:scale-105 transition-transform">
+                    <i class="fas fa-paper-plane text-[10px]"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Mobile Navigation Overlay -->
@@ -160,32 +192,9 @@
         </div>
     </div>
 
-    <!-- AI Sidebar -->
-    <div id="ai-sidebar" class="fixed right-0 top-0 h-full w-full md:w-96 glass z-[80] translate-x-full border-l border-[#ffcc00]/20 flex flex-col">
-        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#ffcc00]/5">
-            <h3 class="font-black italic uppercase text-sm tracking-widest text-[#ffcc00]">✨ AI Curator Assistant</h3>
-            <button onclick="toggleAI()" class="text-white/40 hover:text-white"><i class="fas fa-times"></i></button>
-        </div>
-        <div id="ai-chat-history" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar text-sm">
-            <div class="p-4 bg-white/5 border border-white/10 rounded-sm">
-                Hello. I am the CD5600 Sonic Curator. I have full knowledge of our vault. Tell me what sounds you are hunting for.
-            </div>
-        </div>
-        <div class="p-4 bg-black/40 border-t border-white/10">
-            <div class="relative">
-                <input id="ai-input" type="text" placeholder="Ask for a recommendation..." 
-                    class="w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 pr-12 text-xs focus:border-[#ffcc00] outline-none"
-                    onkeypress="if(event.key === 'Enter') askAI()">
-                <button onclick="askAI()" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#ffcc00] hover:scale-110 transition-transform">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 px-4 md:px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center glass rounded-2xl px-4 md:px-8 py-3 shadow-lg">
+    <nav class="fixed w-full z-50 px-4 md:px-6 py-4 pointer-events-none">
+        <div class="max-w-7xl mx-auto flex justify-between items-center glass rounded-2xl px-4 md:px-8 py-3 shadow-lg pointer-events-auto">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
                 <div class="w-8 h-8 md:w-10 md:h-10 relative flex items-center justify-center">
                     <svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full">
@@ -711,8 +720,14 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
                         </div>
                         <h2 class="text-3xl md:text-5xl font-black uppercase italic mb-2">${product.album}</h2>
                         <p class="text-xl md:text-2xl text-white/40 uppercase font-light tracking-tighter mb-8">${product.artist}</p>
-                        <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] mb-8">
+                        <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] mb-8 relative">
                             <p class="text-sm leading-relaxed text-white/80">${product.description || 'Standard high-fidelity master recording.'}</p>
+                            
+                            <!-- AI Feature: On-Demand Sonic Analysis -->
+                            <button onclick="askAIAbout(${id})" class="mt-6 w-full bg-white/5 border border-white/10 text-white px-6 py-3 font-bold uppercase tracking-widest hover:border-[#ffcc00] hover:text-[#ffcc00] transition-all text-xs flex items-center justify-center gap-2">
+                                <i class="fas fa-sparkles"></i> ✨ Analyze Mastering Quality
+                            </button>
+                            <div id="ai-album-analysis-${id}" class="mt-4 text-xs text-white/80 leading-relaxed font-mono hidden bg-black/40 p-4 border border-[#ffcc00]/20 rounded-sm"></div>
                         </div>
                         <div class="flex flex-col sm:flex-row items-start sm:items-end gap-6 md:gap-8 mb-12">
                             <div>
@@ -729,7 +744,14 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
         }
 
         window.toggleAI = function() {
-            document.getElementById('ai-sidebar').classList.toggle('translate-x-full');
+            const widget = document.getElementById('ai-chat-widget');
+            if (widget.classList.contains('scale-0')) {
+                widget.classList.remove('scale-0', 'opacity-0', 'pointer-events-none');
+                widget.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+            } else {
+                widget.classList.add('scale-0', 'opacity-0', 'pointer-events-none');
+                widget.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+            }
         }
 
         window.showPage = function(id) {
@@ -850,6 +872,117 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
             `).join('');
         }
 
+        // ==========================================
+        // ✨ GEMINI API LLM INTEGRATIONS
+        // ==========================================
+        window.chatMessages = [];
+
+        async function fetchGeminiWithRetry(payload, retries = 5) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            let delay = 1000;
+            
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+                } catch (error) {
+                    if (i === retries - 1) {
+                        console.error("Gemini API Fetch Error:", error);
+                        throw error;
+                    }
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        window.askAI = async function() {
+            const input = document.getElementById('ai-input');
+            const historyDiv = document.getElementById('ai-chat-history');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            input.value = '';
+            
+            // Append User Message
+            historyDiv.innerHTML += `<div class="p-3 bg-white/5 border border-white/10 rounded-lg text-right text-white ml-8 shadow-md"><span class="text-[#ffcc00] text-[10px] font-bold uppercase tracking-widest block mb-1">You</span>${text}</div>`;
+            
+            // Append Typing Indicator
+            const msgId = 'msg-' + Date.now();
+            historyDiv.innerHTML += `<div id="${msgId}" class="p-3 bg-[#ffcc00]/5 border border-[#ffcc00]/20 rounded-lg text-white/60 font-mono animate-pulse mr-8 shadow-md">✨ Checking vault databanks...</div>`;
+            historyDiv.scrollTop = historyDiv.scrollHeight;
+            
+            try {
+                window.chatMessages.push({ role: "user", parts: [{ text: text }] });
+                
+                // Pass compact catalog as context to Gemini
+                const compactCatalog = fullCatalog.map(c => ({ id: c.id, artist: c.artist, album: c.album, price: c.price }));
+                const systemPrompt = `You are the CD5600 Sonic Curator, a helpful, industrial audiophile assistant located on the website for a CD shop in Tbilisi, Georgia. 
+                You act as the primary customer support and product recommendation engine.
+                
+                KNOWLEDGE BASE:
+                - Location: Tbilisi, Georgia.
+                - Shipping: Yes, we ship all around Georgia. Tbilisi Zone is 7.99 GEL. Outside Tbilisi (Batumi, Kutaisi, Rustavi, etc.) is 9.99 GEL. Mountainous regions are 10.99 GEL.
+                - Authenticity: All CDs are 100% authentic, original European/American pressings. No bootlegs.
+                - Condition: All brand-new imports are factory sealed.
+                - Custom Requests: Yes, users can request specific out-of-print or limited masters via Instagram DM.
+                - Returns: Only accepted if the factory seal is intact, OR if the disc arrives cracked/defective. No returns for "ordered by mistake".
+                - Audio Quality: We specialize in 1.41 Mbps bit-perfect, lossless audio (Linear PCM encoding).
+                
+                PRODUCT CATALOG:
+                Recommend high-fidelity CDs exclusively from this vault JSON: ${JSON.stringify(compactCatalog)}. 
+                
+                TONE & RULES:
+                Keep responses concise, helpful, and focused. Use an edgy but professional audiophile tone. Use emojis sparingly. Do not invent products outside the catalog. If asked about shipping or policies, use the exact rules from the Knowledge Base above.`;
+                
+                const payload = {
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    contents: window.chatMessages
+                };
+                
+                const responseText = await fetchGeminiWithRetry(payload);
+                
+                // Update History State & UI
+                window.chatMessages.push({ role: "model", parts: [{ text: responseText }] });
+                const msgEl = document.getElementById(msgId);
+                msgEl.classList.remove('animate-pulse', 'text-white/60', 'font-mono');
+                msgEl.classList.add('text-white/90');
+                msgEl.innerHTML = `<span class="text-[#ffcc00] text-[10px] font-bold uppercase tracking-widest block mb-1">CD5600</span>${responseText.replace(/\n/g, '<br>')}`;
+                historyDiv.scrollTop = historyDiv.scrollHeight;
+            } catch (e) {
+                let errorMsg = "Connection to mainframe lost. (Error 401: Unauthorized)";
+                document.getElementById(msgId).innerHTML = `<span class="text-red-500 font-bold">${errorMsg}</span>`;
+                window.chatMessages.pop(); // Remove failed attempt
+            }
+        }
+
+        window.askAIAbout = async function(id) {
+            const product = getProduct(id);
+            const div = document.getElementById(`ai-album-analysis-${id}`);
+            div.classList.remove('hidden');
+            div.innerHTML = '<span class="animate-pulse text-[#ffcc00]">✨ Analyzing master recording profile...</span>';
+            
+            const prompt = `Write a short, edgy, 2-sentence audiophile review focusing on the mastering quality, instrumentation, and physical CD fidelity of the album "${product.album}" by ${product.artist}. Frame it as an exclusive insight from the CD5600 vault.`;
+            
+            const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+            
+            try {
+                const text = await fetchGeminiWithRetry(payload);
+                div.innerHTML = `<span class="text-[#ffcc00] uppercase font-bold tracking-widest mb-2 block">✨ Master Analysis Complete:</span> <span class="text-white">${text}</span>`;
+            } catch (e) {
+                let errorMsg = "Analysis failed. Network error.";
+                div.innerHTML = `<span class="text-red-500 font-bold">${errorMsg}</span>`;
+            }
+        }
+
         window.onload = () => {
             window.populateFilters();
             window.renderAll();
@@ -859,4 +992,3 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
     </script>
 </body>
 </html>
-
