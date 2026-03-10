@@ -551,7 +551,6 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
 
     <!-- Application Script -->
     <script>
-        let apiKey = "AIzaSyAid5swk7J9-bSwKUFeSLEG1W5Polxm2NI";
         
         // RESTORED FULL CATALOG
         const fullCatalog = [
@@ -878,31 +877,32 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
         window.chatMessages = [];
 
         async function fetchGeminiWithRetry(payload, retries = 5) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            let delay = 1000;
+    // Pointing to your local Netlify Function instead of Google
+    const url = `/.netlify/functions/chat`;
+    let delay = 1000;
+    
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
             
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-                } catch (error) {
-                    if (i === retries - 1) {
-                        console.error("Gemini API Fetch Error:", error);
-                        throw error;
-                    }
-                    await new Promise(res => setTimeout(res, delay));
-                    delay *= 2;
-                }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const data = await response.json();
+            return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+        } catch (error) {
+            if (i === retries - 1) {
+                console.error("Sonic Curator Fetch Error:", error);
+                throw error;
             }
+            await new Promise(res => setTimeout(res, delay));
+            delay *= 2;
         }
+    }
+}
 
         window.askAI = async function() {
             const input = document.getElementById('ai-input');
@@ -992,4 +992,5 @@ Customer Error/Change of Mind:  We will not return items for "ordered by mistake
     </script>
 </body>
 </html>
+
 
