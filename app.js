@@ -343,10 +343,9 @@ window.renderSocials = async function() {
             return `
                 <a href="${url}" target="_blank" class="aspect-square bg-white/5 relative group block overflow-hidden border border-transparent hover:border-[#ffcc00] transition-colors">
                     <img src="${img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 md:gap-6 backdrop-blur-sm">
-                        <span class="text-white text-xs md:text-sm font-bold flex items-center gap-2"><i class="fas fa-heart text-[#ffcc00]"></i> ${likes}</span>
-                        <span class="text-white text-xs md:text-sm font-bold flex items-center gap-2"><i class="fas fa-comment text-[#ffcc00]"></i> ${comments}</span>
-                    </div>
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+    <span class="text-white text-xs font-bold uppercase tracking-widest">View on Instagram</span>
+</div>
                 </a>
             `;
         }).join('');
