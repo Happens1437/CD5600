@@ -325,19 +325,35 @@ const instagramPosts = [
     { url: "https://www.instagram.com/cd.5600/", img: "https://instagram.ftbs3-2.fna.fbcdn.net/v/t51.82787-15/529569444_17854638609498405_5511773162666903214_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=103&ig_cache_key=MzY5NTUwMzA2OTA2ODQ4OTkwNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=oHQQjtiJlWMQ7kNvwHnF34t&_nc_oc=AdmRn79_bDk7xn9S3sKcRixG5oMFW5fDUFIi_1qvA0pvkllz_DtlKZKF_7u7E_BZSFs&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=instagram.ftbs3-2.fna&_nc_gid=YZvhmsXg0MsUnP2FDZ7E4w&oh=00_AfvLHi0kjdBkX3COJkpiUfwaiv0_zKm5GG5FmTYDVuVBBQ&oe=699D8C97", likes: 256, comments: 18 }
 ];
 
-window.renderSocials = function() {
+window.renderSocials = async function() {
     const grid = document.getElementById('insta-grid');
     if (!grid) return;
     const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
-    grid.innerHTML = instagramPosts.map(post => `
-        <a href="${post.url}" target="_blank" class="aspect-square bg-white/5 relative group block overflow-hidden border border-transparent hover:border-[#ffcc00] transition-colors">
-            <img src="${post.img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 md:gap-6 backdrop-blur-sm">
-                <span class="text-white text-xs md:text-sm font-bold flex items-center gap-2"><i class="fas fa-heart text-[#ffcc00]"></i> ${post.likes}</span>
-                <span class="text-white text-xs md:text-sm font-bold flex items-center gap-2"><i class="fas fa-comment text-[#ffcc00]"></i> ${post.comments}</span>
-            </div>
-        </a>
-    `).join('');
+
+    try {
+        const response = await fetch('https://feeds.behold.so/n0vxTxmQfQ1tWOb3jcLK');
+        const data = await response.json();
+        const posts = data.posts || [];
+
+        grid.innerHTML = posts.map(post => {
+            const img = post.sizes?.large?.mediaUrl || post.sizes?.medium?.mediaUrl || fallbackImg;
+            const url = post.permalink || 'https://www.instagram.com/cd.5600/';
+            const likes = post.likeCount || 0;
+            const comments = post.commentsCount || 0;
+            return `
+                <a href="${url}" target="_blank" class="aspect-square bg-white/5 relative group block overflow-hidden border border-transparent hover:border-[#ffcc00] transition-colors">
+                    <img src="${img}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 md:gap-6 backdrop-blur-sm">
+                        <span class="text-white text-xs md:text-sm font-bold flex items-center gap-2"><i class="fas fa-heart text-[#ffcc00]"></i> ${likes}</span>
+                        <span class="text-white text-xs md:text-sm font-bold flex items-center gap-2"><i class="fas fa-comment text-[#ffcc00]"></i> ${comments}</span>
+                    </div>
+                </a>
+            `;
+        }).join('');
+    } catch (e) {
+        console.error('Failed to load Instagram feed:', e);
+        grid.innerHTML = '<div class="col-span-3 text-center text-white/20 uppercase tracking-widest py-10">Feed unavailable</div>';
+    }
 }
 
 window.chatMessages = [];
@@ -409,9 +425,9 @@ window.askAIAbout = async function(id) {
     }
 }
 
-window.onload = () => {
+window.onload = async () => {
     window.populateFilters();
     window.renderAll();
-    window.renderSocials();
+    await window.renderSocials();
     window.updateCartUI();
 };
