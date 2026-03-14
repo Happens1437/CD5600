@@ -95,7 +95,23 @@ const translations = {
         view_instagram: 'View on Instagram', about_title: 'About Us.', faq_title: 'F.A.Q Vault.',
         shipping: 'Shipping', returns: 'Returns', contact: 'Contact', privacy: 'Privacy',
         no_matches: 'No matches found in vault',
-        nav_how: 'How it Works',
+        nav_how: 'How to Buy',
+        how_heading: 'How to Buy.',
+        how_subtitle: 'Three simple steps to get music delivered to your door.',
+        how_step1_title: 'Browse the catalog',
+        how_step1_text: 'Find the album you want right here on cd5600.shop. Browse by artist, filter by price, or search for a specific title.',
+        how_cta: 'Click Secure Purchase',
+        how_step2_title: 'Purchase on Extra.ge',
+        how_step2_text: 'You will be redirected to our store on Extra.ge — Georgia\'s largest and most trusted online marketplace. Your payment and personal data are fully protected.',
+        how_buyer: 'Buyer protected',
+        how_confirmed: 'Order confirmed',
+        how_step3_title: 'We deliver to your door',
+        how_step3_text: 'We ship all across Georgia. Your CD is packaged securely and delivered straight to your address.',
+        how_tbilisi: 'Tbilisi',
+        how_cities: 'Other cities',
+        how_mountain: 'Mountain regions',
+        how_note1: 'All CDs are original factory sealed imports from Europe and the US.',
+        how_note2: 'Every purchase on Extra.ge is secure and fully buyer-protected.',
         faq_q1: 'Can you ship outside of Tbilisi?',
         faq_a1: 'Yes, we ship all around Georgia. Your order is packed securely and delivered straight to your address.',
         faq_q2: 'What are the shipping costs?',
@@ -123,7 +139,23 @@ const translations = {
         view_instagram: 'Instagram-ზე ნახვა', about_title: 'ჩვენს შესახებ.', faq_title: 'კითხვა-პასუხი.',
         shipping: 'მიწოდება', returns: 'დაბრუნება', contact: 'კონტაქტი', privacy: 'კონფიდენციალურობა',
         no_matches: 'ვერაფერი მოიძებნა',
-        nav_how: 'შეძენის პროცესი',
+        nav_how: 'როგორ ვიყიდო',
+        how_heading: 'როგორ ვიყიდო.',
+        how_subtitle: 'სამი მარტივი ნაბიჯი მუსიკის სახლამდე მიტანისთვის.',
+        how_step1_title: 'კატალოგის დათვალიერება',
+        how_step1_text: 'იპოვეთ სასურველი ალბომი cd5600.shop-ზე. მოძებნეთ არტისტის, ფასის ან სახელის მიხედვით.',
+        how_cta: 'დააჭირეთ შეძენის ღილაკს',
+        how_step2_title: 'შეძენა Extra.ge-ზე',
+        how_step2_text: 'გადამისამართდებით ჩვენს მაღაზიაში Extra.ge-ზე — საქართველოს ყველაზე დიდ და სანდო ონლაინ მარკეტფლეისზე. თქვენი გადახდა და პერსონალური მონაცემები სრულად დაცულია.',
+        how_buyer: 'მყიდველი დაცულია',
+        how_confirmed: 'შეკვეთა დადასტურებულია',
+        how_step3_title: 'მივიტანთ თქვენს კართან',
+        how_step3_text: 'ვაგზავნით მთელ საქართველოში. თქვენი CD უსაფრთხოდ არის შეფუთული და პირდაპირ თქვენს მისამართზე მიეწოდება.',
+        how_tbilisi: 'თბილისი',
+        how_cities: 'სხვა ქალაქები',
+        how_mountain: 'მთიანი რეგიონები',
+        how_note1: 'ყველა CD ორიგინალური, ქარხნულად დალუქული იმპორტია ევროპიდან და აშშ-იდან.',
+        how_note2: 'ყველა შეძენა Extra.ge-ზე უსაფრთხოა და მყიდველი სრულად დაცულია.',
         faq_q1: 'შესაძლებელია თუ არა თბილისის გარეთ მიწოდება?',
         faq_a1: 'დიახ, ჩვენ ვაგზავნით მთელ საქართველოში. ჩვენ ვუზრუნველყოფთ, რომ თქვენი მაღალი ხარისხის მედია უსაფრთხოდ იყოს შეფუთული და უსაფრთხოდ მიწოდებული თქვენს ზუსტ მისამართზე.',
         faq_q2: 'რა არის მიწოდების საფასური?',
@@ -199,6 +231,19 @@ window.applyTranslations = function() {
         if (q) q.innerText = window.t(`faq_q${i}`);
         if (a) a.innerText = window.t(`faq_a${i}`);
     }
+
+    // How to Buy page
+    const howMap = {
+        'how-heading': 'how_heading', 'how-subtitle': 'how_subtitle',
+        'how-step1-title': 'how_step1_title', 'how-step1-text': 'how_step1_text',
+        'how-cta': 'how_cta', 'how-step2-title': 'how_step2_title',
+        'how-step2-text': 'how_step2_text', 'how-buyer': 'how_buyer',
+        'how-confirmed': 'how_confirmed', 'how-step3-title': 'how_step3_title',
+        'how-step3-text': 'how_step3_text', 'how-tbilisi': 'how_tbilisi',
+        'how-cities': 'how_cities', 'how-mountain': 'how_mountain',
+        'how-note1': 'how_note1', 'how-note2': 'how_note2',
+    };
+    Object.entries(howMap).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.innerText = window.t(key); });
 }
 
 // ==========================================
