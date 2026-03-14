@@ -178,9 +178,9 @@ window.showProductDetail = async function(id) {
                         <p class="text-[9px] text-white/30 uppercase tracking-[0.3em] mb-1">Unit Price</p>
                         <p class="text-4xl md:text-5xl font-black text-[#ffcc00]">₾${product.price.toFixed(2)}</p>
                     </div>
-                    <button onclick="addToCart(null, ${id})" class="w-full sm:w-auto bg-[#ffcc00] text-black px-12 py-5 font-black uppercase tracking-widest hover:bg-white transform hover:-translate-y-1">
-                        Secure Purchase
-                    </button>
+                    <a href="https://extra.ge/seller/cd-5600/419" target="_blank" class="w-full sm:w-auto bg-[#ffcc00] text-black px-12 py-5 font-black uppercase tracking-widest hover:bg-white transform hover:-translate-y-1 inline-block text-center">
+                       Secure Purchase
+                  </a>
                 </div>
             </div>
         </div>
