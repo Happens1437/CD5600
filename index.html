@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CD5600 | ONLINE CD SHOP</title>
+    
+    <meta name="description" content="CD5600 is a CD shop based in Tbilisi, Georgia. Browse our catalog of original European and American CDs. Purchases are completed securely on Extra.ge, Georgia's largest verified online marketplace.">
+    
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap');
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --brand-yellow: #ffcc00;
+            --brand-black: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--brand-black);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { font-family: 'Syne', sans-serif; }
+
+        .hero-bg-wrap {
+            position: relative;
+            background-image: url('https://mir-s3-cdn-cf.behance.net/project_modules/2800_webp/2b91b6192507573.65dcff03c31ac.jpg');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.7) 0%, rgba(10, 10, 10, 0.98) 100%);
+            z-index: 1;
+        }
+
+        .bg-grid {
+            position: absolute; inset: 0; z-index: 2;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        .glass {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .cd-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid transparent;
+        }
+
+        .cd-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--brand-yellow);
+            background: rgba(255, 204, 0, 0.1);
+            box-shadow: 0 10px 30px -10px rgba(255, 204, 0, 0.2);
+        }
+
+        .nav-link {
+            position: relative; cursor: pointer; transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -4px; left: 0; background-color: var(--brand-yellow);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: var(--brand-yellow); }
+
+        .carousel-container { scroll-behavior: smooth; scrollbar-width: none; }
+        .carousel-container::-webkit-scrollbar { display: none; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        .page-section { display: none; animation: fadeIn 0.5s ease forwards; }
+        .page-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #mobile-menu {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 60px rgba(255, 204, 0, 0.15);
+        }
+
+        @media (max-width: 640px) {
+            .hero-title {
+                text-shadow: 0 0 20px rgba(0,0,0,0.8);
+            }
+            .cd-player-container {
+                transform: scale(0.85);
+                margin-top: -2rem;
+                margin-bottom: -2rem;
+            }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Store",
+      "name": "CD5600",
+      "description": "A CD shop based in Tbilisi, Georgia, selling original European and American albums. Purchases processed securely via Extra.ge.",
+      "url": "https://www.cd5600.shop",
+      "logo": "https://www.cd5600.shop/favicon.png",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Tbilisi",
+        "addressCountry": "GE"
+      },
+      "sameAs": [
+        "https://www.instagram.com/cd.5600/",
+        "https://extra.ge/seller/cd-5600/419"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "CD Catalog",
+        "description": "Original CDs imported from Europe and America. All purchases completed on Extra.ge."
+      }
+    }
+    </script>    
+</head>
+<body class="custom-scrollbar bg-[#0a0a0a]">
+    <div id="toast" class="fixed bottom-10 left-10 z-[100] transform translate-y-24 opacity-0 transition-all duration-300 glass border-l-4 border-[#ffcc00] px-6 py-4 flex items-center gap-4 text-sm font-bold tracking-widest uppercase shadow-2xl pointer-events-none">
+        <i class="fas fa-info-circle text-[#ffcc00]" id="toast-icon"></i>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <button onclick="toggleAI()" class="fixed bottom-6 right-6 z-[90] w-14 h-14 rounded-full bg-[#ffcc00] text-black flex items-center justify-center text-xl shadow-[0_0_20px_rgba(255,204,0,0.4)] hover:scale-110 transition-transform">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+
+    <div id="ai-chat-widget" class="fixed bottom-24 right-6 z-[90] w-[calc(100vw-3rem)] sm:w-[380px] h-[500px] max-h-[70vh] glass rounded-xl border border-[#ffcc00]/30 flex flex-col overflow-hidden shadow-2xl transition-all duration-300 transform scale-0 opacity-0 origin-bottom-right pointer-events-none">
+        <div class="p-4 border-b border-white/10 flex justify-between items-center bg-black/80">
+            <h3 class="font-black italic uppercase text-sm tracking-widest text-[#ffcc00] flex items-center gap-2">
+                <i class="fas fa-sparkles"></i> CDSHOP Assistant
+            </h3>
+            <button onclick="toggleAI()" class="text-white/40 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div id="ai-chat-history" class="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar text-sm bg-[#0a0a0a]/80 backdrop-blur-md">
+            <div class="p-4 bg-[#ffcc00]/10 border border-[#ffcc00]/20 rounded-lg text-white/90">
+                Hello. I am the CD5600 Assistant. I can help you find specific albums, explain our high-fidelity process, or answer questions about shipping and returns. What are you hunting for?
+            </div>
+        </div>
+        <div class="p-4 bg-black/90 border-t border-white/10">
+            <div class="relative">
+                <input id="ai-input" type="text" placeholder="Ask a question..." 
+                    class="w-full bg-white/5 border border-white/20 rounded-full px-5 py-3 pr-12 text-xs focus:border-[#ffcc00] outline-none transition-colors"
+                    onkeypress="if(event.key === 'Enter') askAI()">
+                <button onclick="askAI()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-[#ffcc00] text-black hover:scale-105 transition-transform">
+                    <i class="fas fa-paper-plane text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-[#0a0a0a] z-[70] translate-x-full flex flex-col p-10">
+        <div class="flex justify-between items-center mb-16">
+            <div class="flex items-center space-x-3">
+                <svg viewBox="0 0 100 100" class="w-8 h-8">
+                    <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                </svg>
+                <span class="text-xl font-bold uppercase tracking-tighter">CD5600</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="text-white/40 text-2xl"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="flex flex-col space-y-8 text-3xl font-black italic uppercase">
+            <a href="#home" onclick="showPage('home'); toggleMobileMenu(); return false;" id="mobile-nav-home" class="hover:text-[#ffcc00]">Home</a>
+            <a href="#catalog" onclick="showPage('catalog'); toggleMobileMenu(); return false;" id="mobile-nav-catalog" class="hover:text-[#ffcc00]">Catalog</a>
+            <a href="#socials" onclick="showPage('socials'); toggleMobileMenu(); return false;" id="mobile-nav-socials" class="hover:text-[#ffcc00]">Socials</a>
+            <a href="#about" onclick="showPage('about'); toggleMobileMenu(); return false;" id="mobile-nav-about" class="hover:text-[#ffcc00]">About</a>
+            <a href="#faq" onclick="showPage('faq'); toggleMobileMenu(); return false;" id="mobile-nav-faq" class="hover:text-[#ffcc00]">FAQ</a>
+        </div>
+        <div class="mt-auto pt-10 border-t border-white/10">
+            <p class="text-white/40 text-xs uppercase tracking-widest mb-4">Tbilisi, Georgia</p>
+            <div class="flex space-x-6 text-xl">
+                <a href="https://www.instagram.com/cd.5600/" target="_blank" class="text-white hover:text-[#ffcc00]"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white hover:text-[#ffcc00]"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="fixed w-full z-50 px-4 md:px-6 py-4 pointer-events-none">
+        <div class="max-w-7xl mx-auto flex justify-between items-center glass rounded-2xl px-4 md:px-8 py-3 shadow-lg pointer-events-auto">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
+                <div class="w-8 h-8 md:w-10 md:h-10 relative flex items-center justify-center">
+                    <svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full">
+                        <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                    </svg>
+                    <span class="relative z-10 text-[8px] md:text-[10px] font-black text-black leading-none text-center">CD<br>5600</span>
+                </div>
+                <span class="text-lg md:text-xl font-bold tracking-tighter uppercase">CD5600</span>
+            </div>
+            
+            <div class="hidden md:flex space-x-8 items-center font-bold uppercase text-xs tracking-widest">
+                <a href="#home" onclick="showPage('home'); return false;" class="nav-link active" id="nav-home">Home</a>
+                <a href="#catalog" onclick="showPage('catalog'); return false;" class="nav-link" id="nav-catalog">Catalog</a>
+                <a href="#socials" onclick="showPage('socials'); return false;" class="nav-link" id="nav-socials">Socials</a>
+                <a href="#about" onclick="showPage('about'); return false;" class="nav-link" id="nav-about">About</a>
+                <a href="#faq" onclick="showPage('faq'); return false;" class="nav-link" id="nav-faq">FAQ</a>
+            </div>
+
+            <div class="flex items-center space-x-3 md:space-x-5">
+                <button class="hover:text-[#ffcc00] transition-colors" onclick="showPage('catalog'); document.getElementById('catalog-search').focus();"><i class="fas fa-search"></i></button>
+                <div class="relative cursor-pointer" onclick="showPage('cart')">
+                    <button class="hover:text-[#ffcc00] transition-colors"><i class="fas fa-shopping-cart"></i></button>
+                    <span class="absolute -top-2 -right-2 bg-[#ffcc00] text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center" id="cart-count">0</span>
+                </div>
+                <button onclick="toggleLang()" id="lang-btn" class="text-xs font-bold uppercase tracking-widest hover:text-[#ffcc00] transition-colors border border-white/20 hover:border-[#ffcc00] px-2 py-1 rounded-sm">EN</button>
+                <button class="md:hidden" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <section id="home" class="page-section active">
+            <div class="hero-bg-wrap pt-32 md:pt-40 pb-20 px-4 md:px-6 relative">
+                <div class="hero-bg-overlay"></div>
+                <div class="bg-grid"></div>
+
+                <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
+                    <div class="relative text-center lg:text-left">
+                        <h1 class="hero-title text-4xl sm:text-6xl lg:text-8xl font-black mb-6 md:mb-8 leading-tight italic uppercase drop-shadow-2xl">
+                            MUSIC YOU <br><span class="text-[#ffcc00]">CAN HOLD.</span>
+                        </h1>
+                        <p class="text-base md:text-lg text-white/80 md:text-white/60 mb-8 md:mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed font-light">
+                            CD5600 is a CD shop based in Tbilisi, Georgia, offering original European and American products to our community. We bring authentic albums from abroad directly to your collection.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start">
+                            <button id="btn-browse" onclick="showPage('catalog')" class="w-full sm:w-auto bg-[#ffcc00] hover:bg-white text-black px-8 py-4 rounded-sm font-bold uppercase tracking-widest transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,204,0,0.3)]">
+                                Browse Collection
+                            </button>
+                            <button id="btn-about" onclick="showPage('about')" class="w-full sm:w-auto bg-transparent border border-white/20 hover:border-white hover:bg-white/5 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-widest transition-all">
+                                Read About Us
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex justify-center items-center mt-8 lg:mt-0 z-20 cd-player-container">
+                        <div class="relative w-[300px] h-[360px] md:w-[460px] md:h-[520px] bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.8)] p-3 md:p-4 flex flex-col items-center transition-all duration-700 hover:scale-[1.02] group">
+                            
+                            <div class="absolute top-4 left-4 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-black shadow-inner border border-white/20 flex items-center justify-center"><div class="w-1 h-px bg-white/30 rotate-45"></div></div>
+                            <div class="absolute top-4 right-4 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-black shadow-inner border border-white/20 flex items-center justify-center"><div class="w-1 h-px bg-white/30 -rotate-45"></div></div>
+                            <div class="absolute bottom-4 left-4 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-black shadow-inner border border-white/20 flex items-center justify-center"><div class="w-1 h-px bg-white/30 rotate-12"></div></div>
+                            <div class="absolute bottom-4 right-4 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-black shadow-inner border border-white/20 flex items-center justify-center"><div class="w-1 h-px bg-white/30 rotate-90"></div></div>
+
+                            <div class="absolute top-4 left-1/2 -translate-x-1/2 text-[7px] md:text-[8px] font-mono text-white/40 tracking-[0.3em] uppercase border border-white/10 px-2 md:px-3 py-1 rounded bg-black shadow-inner">CD5600 Master Drive</div>
+
+                            <div class="relative mt-8 w-[240px] h-[240px] md:w-[380px] md:h-[380px] rounded-full bg-black border-2 border-white/5 shadow-[0_10px_30px_rgba(0,0,0,1)_inset] flex items-center justify-center z-10">
+                                <div class="w-[96%] h-[96%] rounded-full glass border-none flex items-center justify-center shadow-2xl animate-[spin_12s_linear_infinite] relative overflow-hidden z-10">
+                                     <div class="absolute inset-0 rounded-full opacity-30" style="background: conic-gradient(from 180deg at 50% 50%, #ffcc00, #ffffff, #ffcc00, #222, #ffcc00);"></div>
+                                     <div class="absolute inset-0 rounded-full opacity-50 mix-blend-overlay pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.5%22/%3E%3C/svg%3E');"></div>
+                                     <div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-24 md:h-24 rounded-full bg-black flex items-center justify-center border-4 border-[#ffcc00] shadow-[inset_0_0_20px_rgba(255,204,0,0.5)] z-10">
+                                        <svg viewBox="0 0 100 100" class="absolute w-10 h-10 md:w-16 md:h-16 opacity-50">
+                                            <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                                        </svg>
+                                        <span class="relative z-10 text-[10px] md:text-[14px] font-black text-[#ffcc00] leading-none text-center tracking-widest mt-0.5">CD<br>5600</span>
+                                     </div>
+                                </div>
+                                <div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full bg-gradient-to-br from-gray-200 to-gray-500 shadow-[0_2px_10px_rgba(0,0,0,1)] border border-black z-30"></div>
+                            </div>
+
+                            <div class="absolute top-10 right-4 md:top-16 md:right-8 z-30 drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)] pointer-events-none">
+                                <div class="w-10 h-10 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-[#333] to-[#0a0a0a] border border-white/20 flex items-center justify-center relative z-20 shadow-xl">
+                                    <div class="w-5 h-5 md:w-7 md:h-7 rounded-full bg-gradient-to-br from-gray-500 to-gray-800 border border-black shadow-inner"></div>
+                                </div>
+                                <div class="absolute top-5 left-1/2 -translate-x-1/2 w-1.5 md:w-2.5 h-[140px] md:h-[220px] bg-gradient-to-r from-gray-400 via-white to-gray-500 rounded-full origin-top transform rotate-[35deg] shadow-2xl z-10">
+                                    <div class="absolute bottom-[-8px] left-1/2 -translate-x-1/2 w-4 h-10 md:w-6 md:h-14 bg-gradient-to-b from-[#222] to-black border border-white/20 rounded-sm transform rotate-[-20deg] origin-top shadow-2xl">
+                                        <div class="absolute bottom-2 right-full w-2 h-4 bg-red-500/80 rounded-l-sm border-y border-l border-red-400/50 shadow-[0_0_10px_rgba(255,0,0,0.8)] animate-pulse"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 flex justify-between items-end z-20">
+                                <div class="flex gap-2">
+                                    <button class="w-8 h-8 md:w-12 md:h-12 rounded-full bg-[#111] border border-white/10 flex items-center justify-center text-[#ffcc00] hover:bg-[#ffcc00] hover:text-black transition-all active:scale-95 shadow-xl">
+                                        <i class="fas fa-play text-[10px] md:text-sm ml-0.5"></i>
+                                    </button>
+                                    <button class="w-8 h-8 md:w-12 md:h-12 rounded-full bg-[#111] border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all active:scale-95 shadow-xl">
+                                        <i class="fas fa-pause text-[10px] md:text-sm"></i>
+                                    </button>
+                                </div>
+                                <div class="px-2 py-1 md:px-4 md:py-2 bg-black border border-white/10 rounded shadow-inner flex flex-col items-end">
+                                    <span class="text-[#ffcc00] font-mono text-[7px] md:text-[10px] tracking-widest opacity-80 uppercase">Output: PCM</span>
+                                    <span class="text-white font-mono text-[9px] md:text-xs tracking-widest mt-0.5">TRK 01 <span class="text-white/50 ml-1 animate-pulse">00:00:00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 md:px-6 py-12 md:py-20 relative bg-[#0a0a0a]">
+                <div class="max-w-7xl mx-auto mb-16 border border-white/10 rounded-sm overflow-hidden shadow-[0_0_20px_rgba(255,204,0,0.1)]">
+                    <img src="https://sonic.ge/dyn/8IW479OnjASuMeGIwkYfIs0HhX63SgVj45CDyAzaLOM/rs:fit:1440:0/plain/images/coverphotos/7c71c90a-62bf-4376-8b5b-604ea264962a.jpg" alt="CD5600 Banner" class="w-full h-auto object-cover" onerror="this.src='https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=1920&q=80'">
+                </div>
+
+                <div class="max-w-7xl mx-auto py-10">
+                    <div class="flex justify-between items-center mb-10 md:mb-12">
+                        <h2 id="text-highlighted" class="text-2xl md:text-3xl font-black italic uppercase">Highlighted <span class="text-[#ffcc00]">Albums</span></h2>
+                        <div class="flex gap-2 md:gap-4">
+                            <button onclick="scrollCarousel(-1)" class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffcc00] hover:text-black transition-all">
+                                <i class="fas fa-chevron-left text-xs"></i>
+                            </button>
+                            <button onclick="scrollCarousel(1)" class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#ffcc00] hover:text-black transition-all">
+                                <i class="fas fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="home-carousel" class="carousel-container flex gap-4 md:gap-6 overflow-x-auto pb-8 pt-4 -mt-4 px-2"></div>
+                </div>
+
+                <div class="max-w-7xl mx-auto py-10 mt-10 border-t border-white/10">
+                    <div class="flex justify-between items-center mb-12">
+                        <h2 id="text-new-additions" class="text-2xl md:text-3xl font-black italic uppercase">New <span class="text-[#ffcc00]">Additions</span></h2>
+                    </div>
+                    <div id="new-arrivals-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"></div>
+                </div>
+
+                <div class="max-w-7xl mx-auto py-12 md:py-20 mt-10 border-t border-white/10">
+                    <div class="grid md:grid-cols-3 gap-8 md:gap-12">
+                        <div class="md:col-span-1">
+                            <h2 class="text-2xl md:text-3xl font-black italic uppercase text-[#ffcc00] mb-4">Shop's Insight</h2>
+                        </div>
+                        <div class="md:col-span-2 space-y-6 text-sm md:text-base text-white/70 leading-relaxed font-light">
+                            <p>At CD5600, we believe music was never meant to be something you scroll past. It's something you hold, unwrap, and keep. We started this shop because we felt that physical music deserved better than being forgotten in the age of streaming and we built it for people who feel the same way.</p>
+                            <p>Every album in our catalog is an original pressing, imported directly from Europe and America. We don't stock fillers. We don't chase trends. We pick what we genuinely believe deserves a place in your collection, and we stand behind every single title we sell.</p>
+                            <p>All purchases are completed securely through Extra.ge, Georgia's largest verified online marketplace.</p>
+                            <p>Whether you're a lifelong collector or someone who just heard their first CD and felt something — CD5600 is your place.</p>
+                            <p>Music isn't just audio. It's a document. It's a feeling you can hold in your hands.</p>
+                            <p>Keep the culture physical.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="catalog" class="page-section pt-32 md:pt-40 pb-20 px-4 md:px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-white/10 pb-8 gap-6">
+                    <div class="w-full md:w-auto">
+                        <h2 id="text-master-catalog" class="text-3xl md:text-4xl font-black italic uppercase mb-6">Master <span class="text-[#ffcc00]">Catalog</span></h2>
+                        <div class="flex flex-wrap gap-3">
+                            <div class="relative flex-1 md:flex-none">
+                                <select id="filter-artist" onchange="applyFilters()" class="w-full bg-white/5 border border-white/10 rounded-sm pl-4 pr-10 py-3 text-xs focus:border-[#ffcc00] outline-none text-white appearance-none cursor-pointer">
+                                    <option value="all" class="bg-[#0a0a0a]">All Artists</option>
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none text-[10px]"></i>
+                            </div>
+                            <div class="relative flex-1 md:flex-none">
+                                <select id="sort-price" onchange="applyFilters()" class="w-full bg-white/5 border border-white/10 rounded-sm pl-4 pr-10 py-3 text-xs focus:border-[#ffcc00] outline-none text-white appearance-none cursor-pointer">
+                                    <option value="default" class="bg-[#0a0a0a]">Sort: Default</option>
+                                    <option value="low-high" class="bg-[#0a0a0a]">Price: Low-High</option>
+                                    <option value="high-low" class="bg-[#0a0a0a]">Price: High-Low</option>
+                                </select>
+                                <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none text-[10px]"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative w-full md:w-96 group">
+                        <input type="text" id="catalog-search" oninput="applyFilters()" placeholder="Search artist or album..." 
+                               class="w-full bg-white/5 border border-white/10 rounded-sm px-6 py-4 pl-12 text-sm focus:border-[#ffcc00] outline-none transition-all">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#ffcc00] transition-colors"></i>
+                    </div>
+                </div>
+                <div id="catalog-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8"></div>
+            </div>
+        </section>
+
+        <section id="product-detail" class="page-section pt-32 md:pt-40 pb-20 px-4 md:px-6">
+            <div class="max-w-7xl mx-auto" id="detail-mount"></div>
+        </section>
+
+        <section id="cart" class="page-section pt-32 md:pt-40 pb-20 px-4 md:px-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 id="text-cart-title" class="text-3xl md:text-4xl font-black italic uppercase mb-12 border-b border-white/10 pb-4">Shopping <span class="text-[#ffcc00]">Cart</span></h2>
+                <div id="cart-mount" class="space-y-4 md:space-y-6"></div>
+                <div id="cart-summary" class="mt-12 p-6 md:p-8 glass border-t-2 border-[#ffcc00] flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div class="text-center md:text-left">
+                        <p id="text-total-balance" class="text-white/40 uppercase text-xs tracking-widest mb-1">Total Balance</p>
+                        <h3 class="text-3xl md:text-4xl font-black text-[#ffcc00]" id="cart-total">₾0.00</h3>
+                    </div>
+                    <button id="btn-finalize" class="bg-white text-black px-12 py-4 rounded-sm font-black uppercase tracking-widest hover:bg-[#ffcc00] transition-colors w-full md:w-auto">Finalize Checkout</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="socials" class="page-section pt-32 md:pt-40 pb-20 px-4 md:px-6">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 mb-16 border-b border-white/10 pb-12">
+                    <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-[#ffcc00] p-1 flex-shrink-0 glow-effect">
+                        <div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+                            <svg viewBox="0 0 100 100" class="w-16 h-16 md:w-20 md:h-20">
+                                <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1 text-center md:text-left">
+                        <div class="flex flex-col md:flex-row md:items-center gap-4 mb-4 justify-center md:justify-start">
+                            <h2 class="text-2xl md:text-3xl font-black italic tracking-wider">cd.5600</h2>
+                            <a href="https://www.instagram.com/cd.5600/" target="_blank" id="text-follow-ig" class="bg-[#ffcc00] text-black px-6 py-2 rounded-sm font-bold uppercase tracking-widest text-xs hover:bg-white transition-all transform hover:scale-105 inline-block mx-auto md:mx-0">
+                                Follow on Instagram
+                            </a>
+                        </div>
+                        <p class="text-white/60 text-sm max-w-md mx-auto md:mx-0 leading-relaxed">
+                            Industrial High-Fidelity.<br>
+                            💿 Music you can hold.<br>
+                            📍 Tbilisi, Georgia.
+                        </p>
+                    </div>
+                </div>
+                <div id="insta-grid" class="grid grid-cols-3 gap-1 md:gap-4"></div>
+            </div>
+        </section>
+
+        <section id="about" class="page-section pt-32 md:pt-40 pb-20 px-4 md:px-6">
+            <div class="max-w-3xl mx-auto">
+                <h2 id="text-about-title" class="text-4xl md:text-6xl font-black italic uppercase mb-12">About <span class="text-[#ffcc00]">Us.</span></h2>
+                <div class="space-y-8 text-base md:text-lg text-white/50 leading-relaxed">
+                    <p class="text-xl md:text-2xl text-white font-bold italic">CD5600 was built for people who still feel music.</p>
+                    <p>In a world of streaming and scrolling, we believe music should be something you can hold, collect, and truly experience. From iconic albums to rare finds, we bring physical music back into the spotlight.</p>
+                    <p>We carefully select every title in our catalog to ensure quality, originality, and variety. Whether you're a passionate collector or someone discovering music beyond algorithms — CD5600 is your destination.</p>
+                    <div class="pl-6 border-l-4 border-[#ffcc00] my-8 py-2">
+                        <p class="text-white font-bold text-lg md:text-xl uppercase tracking-widest mb-2">Music isn't just audio.</p>
+                        <p class="text-white/80 italic">It's art. It's memory. It's identity.</p>
+                    </div>
+                    <p class="text-[#ffcc00] font-black uppercase tracking-[0.2em] text-lg md:text-xl pt-8">CD5600 — Keep the Culture Physical.</p>
+                    <p class="text-[#ffcc00] font-black uppercase tracking-[0.2em] text-lg md:text-xl pt-4">Tbilisi, Georgia.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="page-section pt-32 md:pt-40 pb-20 px-4 md:px-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 id="text-faq-title" class="text-4xl md:text-6xl font-black italic uppercase mb-12">F.A.Q <span class="text-[#ffcc00]">Vault.</span></h2>
+                
+                <div class="space-y-6">
+                    <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] hover:bg-white/5 transition-colors">
+                        <h3 class="text-lg md:text-xl font-black uppercase tracking-widest text-[#ffcc00] mb-3">Is it possible to ship outside of Tbilisi?</h3>
+                        <p class="text-white/70 text-sm md:text-base leading-relaxed">Yes, we ship all around Georgia. We ensure your high-fidelity media is packaged in secure, anti-static industrial packaging and delivered safely to your exact location.</p>
+                    </div>
+                    <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] hover:bg-white/5 transition-colors">
+                        <h3 class="text-lg md:text-xl font-black uppercase tracking-widest text-[#ffcc00] mb-3">What are the shipping costs?</h3>
+                        <p class="text-white/70 text-sm md:text-base leading-relaxed">Shipping costs depend on your location within Georgia:<br><br>Tbilisi Zone – 7.99 GEL<br>Outside of Tbilisi (e.g., Batumi, Kutaisi, Rustavi, and other cities) – 9.99 GEL<br>Mountainous regions outside of Tbilisi – 10.99 GEL<br><br>Shipping fees are calculated based on the delivery region and will be shown during checkout.</p>
+                    </div>
+                    <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] hover:bg-white/5 transition-colors">
+                        <h3 class="text-lg md:text-xl font-black uppercase tracking-widest text-[#ffcc00] mb-3">Are your discs original?</h3>
+                        <p class="text-white/70 text-sm md:text-base leading-relaxed">Absolutely. Every single unit in our vault is a 100% authentic, original pressing imported directly from verified distributors in the United States and Europe. We strictly guarantee zero bootlegs and zero counterfeit media.</p>
+                    </div>
+                    <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] hover:bg-white/5 transition-colors">
+                        <h3 class="text-lg md:text-xl font-black uppercase tracking-widest text-[#ffcc00] mb-3">Do you take custom requests?</h3>
+                        <p class="text-white/70 text-sm md:text-base leading-relaxed">Yes. If you are hunting for a specific master recording, limited edition, or out-of-print physical copy, reach out to us via Instagram. Our curators will track it down through our international network and provide a secure quote.</p>
+                    </div>
+                    <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] hover:bg-white/5 transition-colors">
+                        <h3 class="text-lg md:text-xl font-black uppercase tracking-widest text-[#ffcc00] mb-3">Are the CDs factory sealed?</h3>
+                        <p class="text-white/70 text-sm md:text-base leading-relaxed">Yes, all of our brand-new imports arrive completely factory sealed. We preserve the pristine condition of the packaging so you get the true, authentic unboxing experience.</p>
+                    </div>
+                    <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] hover:bg-white/5 transition-colors">
+                        <h3 class="text-lg md:text-xl font-black uppercase tracking-widest text-[#ffcc00] mb-3">What is the return policy?</h3>
+                        <p class="text-white/70 text-sm md:text-base leading-relaxed">Damaged or Defective Items: We will return the item and refund if the received CD is cracked, skips, has manufacturing defects or order has a missing item. Upon receipt, we will offer a replacement (if in stock) or a full refund.<br><br>New/Sealed CDs Must be returned in their original, unopened shrink-wrap. Once the seal is broken or the plastic wrap is removed, we cannot accept a return unless the disc is found to be defective.<br><br>Customer Error/Change of Mind: We will not return items for "ordered by mistake" or "no longer want."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-16 px-6 border-t border-white/10 mt-20 bg-[#0a0a0a]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
+                    <div class="w-8 h-8 relative">
+                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                            <path d="M50 0 C52 40 60 48 100 50 C60 52 52 60 50 100 C48 60 40 52 0 50 C40 48 48 40 50 0" fill="#ffcc00"/>
+                        </svg>
+                    </div>
+                    <span class="font-bold tracking-tighter uppercase text-xl text-white">CD5600</span>
+                </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6 md:gap-8 text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/50">
+                <a href="#faq" id="footer-shipping" onclick="showPage('faq'); return false;" class="cursor-pointer hover:text-[#ffcc00] transition-colors">Shipping</a>
+                <a href="#faq" id="footer-returns" onclick="showPage('faq'); return false;" class="cursor-pointer hover:text-[#ffcc00] transition-colors">Returns</a>
+                <a href="#faq" onclick="showPage('faq'); return false;" class="cursor-pointer hover:text-[#ffcc00] transition-colors">FAQ</a>
+                <a href="#socials" id="footer-contact" onclick="showPage('socials'); return false;" class="cursor-pointer hover:text-[#ffcc00] transition-colors">Contact</a>
+            </div>
+        </div>
+        <div class="mt-12 text-center text-[8px] md:text-[10px] text-white/30 uppercase tracking-[0.4em]">
+            © 2026 CD5600. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
