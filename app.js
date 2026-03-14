@@ -95,6 +95,7 @@ const translations = {
         view_instagram: 'View on Instagram', about_title: 'About Us.', faq_title: 'F.A.Q Vault.',
         shipping: 'Shipping', returns: 'Returns', contact: 'Contact', privacy: 'Privacy',
         no_matches: 'No matches found in vault',
+        nav_how: 'How it Works',
         faq_q1: 'Can you ship outside of Tbilisi?',
         faq_a1: 'Yes, we ship all around Georgia. Your order is packed securely and delivered straight to your address.',
         faq_q2: 'What are the shipping costs?',
@@ -122,6 +123,7 @@ const translations = {
         view_instagram: 'Instagram-ზე ნახვა', about_title: 'ჩვენს შესახებ.', faq_title: 'კითხვა-პასუხი.',
         shipping: 'მიწოდება', returns: 'დაბრუნება', contact: 'კონტაქტი', privacy: 'კონფიდენციალურობა',
         no_matches: 'ვერაფერი მოიძებნა',
+        nav_how: 'შეძენის პროცესი',
         faq_q1: 'შესაძლებელია თუ არა თბილისის გარეთ მიწოდება?',
         faq_a1: 'დიახ, ჩვენ ვაგზავნით მთელ საქართველოში. ჩვენ ვუზრუნველყოფთ, რომ თქვენი მაღალი ხარისხის მედია უსაფრთხოდ იყოს შეფუთული და უსაფრთხოდ მიწოდებული თქვენს ზუსტ მისამართზე.',
         faq_q2: 'რა არის მიწოდების საფასური?',
@@ -152,10 +154,10 @@ window.toggleLang = function() {
 }
 
 window.applyTranslations = function() {
-    const navMap = { 'nav-home': 'nav_home', 'nav-catalog': 'nav_catalog', 'nav-socials': 'nav_socials', 'nav-about': 'nav_about', 'nav-faq': 'nav_faq' };
+    const navMap = { 'nav-home': 'nav_home', 'nav-catalog': 'nav_catalog', 'nav-socials': 'nav_socials', 'nav-about': 'nav_about', 'nav-faq': 'nav_faq', 'nav-how': 'nav_how' };
     Object.entries(navMap).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.innerText = window.t(key); });
 
-    const mobileNavMap = { 'mobile-nav-home': 'nav_home', 'mobile-nav-catalog': 'nav_catalog', 'mobile-nav-socials': 'nav_socials', 'mobile-nav-about': 'nav_about', 'mobile-nav-faq': 'nav_faq' };
+    const mobileNavMap = { 'mobile-nav-home': 'nav_home', 'mobile-nav-catalog': 'nav_catalog', 'mobile-nav-socials': 'nav_socials', 'mobile-nav-about': 'nav_about', 'mobile-nav-faq': 'nav_faq', 'mobile-nav-how': 'nav_how' };
     Object.entries(mobileNavMap).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.innerText = window.t(key); });
 
     const idMap = {
