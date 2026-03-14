@@ -95,6 +95,18 @@ const translations = {
         view_instagram: 'View on Instagram', about_title: 'About Us.', faq_title: 'F.A.Q Vault.',
         shipping: 'Shipping', returns: 'Returns', contact: 'Contact', privacy: 'Privacy',
         no_matches: 'No matches found in vault',
+        faq_q1: 'Can you ship outside of Tbilisi?',
+        faq_a1: 'Yes, we ship all around Georgia. Your order is packed securely and delivered straight to your address.',
+        faq_q2: 'What are the shipping costs?',
+        faq_a2: 'Tbilisi Zone – 7.99 GEL\nOutside Tbilisi (Batumi, Kutaisi, Rustavi, etc.) – 9.99 GEL\nMountainous regions – 10.99 GEL',
+        faq_q3: 'Are your CDs original?',
+        faq_a3: 'Yes. Every CD we sell is a 100% authentic original pressing imported from the US or Europe. No bootlegs, no fakes.',
+        faq_q4: 'Do you take custom requests?',
+        faq_a4: 'Yes. If you are looking for a specific album, reach out to us on Instagram. We will find it and get back to you with a price.',
+        faq_q5: 'Are the CDs factory sealed?',
+        faq_a5: 'Yes, all our new imports arrive factory sealed so you get the full unboxing experience.',
+        faq_q6: 'What is the return policy?',
+        faq_a6: 'If your CD arrives cracked, skips, or has a manufacturing defect — we will replace it or give you a full refund. Sealed CDs can only be returned unopened. We do not accept returns for "ordered by mistake" or "changed my mind."',
     },
     ka: {
         nav_home: 'მთავარი', nav_catalog: 'კატალოგი', nav_socials: 'სოციალები', nav_about: 'ჩვენს შესახებ', nav_faq: 'კითხვები',
@@ -110,6 +122,18 @@ const translations = {
         view_instagram: 'Instagram-ზე ნახვა', about_title: 'ჩვენს შესახებ.', faq_title: 'კითხვა-პასუხი.',
         shipping: 'მიწოდება', returns: 'დაბრუნება', contact: 'კონტაქტი', privacy: 'კონფიდენციალურობა',
         no_matches: 'ვერაფერი მოიძებნა',
+        faq_q1: 'შესაძლებელია თუ არა თბილისის გარეთ მიწოდება?',
+        faq_a1: 'დიახ, ჩვენ ვაგზავნით მთელ საქართველოში. ჩვენ ვუზრუნველყოფთ, რომ თქვენი მაღალი ხარისხის მედია უსაფრთხოდ იყოს შეფუთული და უსაფრთხოდ მიწოდებული თქვენს ზუსტ მისამართზე.',
+        faq_q2: 'რა არის მიწოდების საფასური?',
+        faq_a2: 'თბილისის ზონა – 7.99 ლარი\nთბილისს გარეთ (ბათუმი, ქუთაისი, რუსთავი და სხვა) – 9.99 ლარი\nთბილისს გარეთ მთიანი რეგიონები – 10.99 ლარი',
+        faq_q3: 'CD ები ორიგინალია?',
+        faq_a3: 'აბსოლუტურად. ჩვენთან არსებული თითოეული ერთეული არის 100%-ით ავთენტური, ორიგინალი ბეჭდვა, რომელიც იმპორტირებულია პირდაპირ ამერიკის შეერთებულ შტატებსა და ევროპაში დამოწმებული დისტრიბუტორებისგან.',
+        faq_q4: 'იღებთ თუ არა ინდივიდუალურ შეკვეთებს?',
+        faq_a4: 'დიახ. თუ კონკრეტულ ალბომს ეძებთ, დაგვიკავშირდით ინსტაგრამის საშუალებით. ჩვენი კურატორები მას მოძებნიან და ინფორმაციას მოგაწვდიან.',
+        faq_q5: 'CD ები გაუხსნელია?',
+        faq_a5: 'დიახ, ჩვენი ყველა ახალი იმპორტი ჩამოდის ქარხნულად დალუქული, ასე რომ თქვენ მიიღებთ სრულ ავთენტურ გახსნის გამოცდილებას.',
+        faq_q6: 'რა არის დაბრუნების პოლიტიკა?',
+        faq_a6: 'დაზიანებული ან დეფექტური ნივთები: ჩვენ დაგიბრუნებთ ნივთს და თანხას, თუ მიღებული CD გატეხილია, გამოტოვებულია ან აქვს საწარმოო დეფექტი. შემოგთავაზებთ ჩანაცვლებას (თუ მარაგშია) ან სრულ ანაზღაურებას. ახალი/დალუქული CD-ები უნდა დაბრუნდეს გაუხსნელ შეფუთვაში. ბეჭდის დაზიანების შემდეგ ვერ მივიღებთ დაბრუნებას, თუ დისკი დეფექტური არ არის. მომხმარებლის შეცდომა: ჩვენ არ დავაბრუნებთ ნივთებს რომელიც შეცდომით არის შეკვეთილი.',
     }
 };
 
@@ -164,6 +188,14 @@ window.applyTranslations = function() {
         if (sortSelect.options[0]) sortSelect.options[0].text = window.t('sort_default');
         if (sortSelect.options[1]) sortSelect.options[1].text = window.t('sort_low_high');
         if (sortSelect.options[2]) sortSelect.options[2].text = window.t('sort_high_low');
+    }
+
+    // FAQ questions and answers
+    for (let i = 1; i <= 6; i++) {
+        const q = document.getElementById(`faq-q${i}`);
+        const a = document.getElementById(`faq-a${i}`);
+        if (q) q.innerText = window.t(`faq_q${i}`);
+        if (a) a.innerText = window.t(`faq_a${i}`);
     }
 }
 
