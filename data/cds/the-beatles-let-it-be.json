@@ -1,0 +1,11 @@
+{
+  "artist": "The Beatles",
+  "album": "Let It Be",
+  "price": 55,
+  "imgs": [
+    "https://ukstore.thebeatles.com/cdn/shop/files/SharedImage-124039.jpg?v=1770023646&width=1200",
+    "https://ukstore.thebeatles.com/cdn/shop/files/SharedImage-124050.jpg?v=1770023646&width=1200",
+    "https://ukstore.thebeatles.com/cdn/shop/files/SharedImage-124444.jpg?v=1770023646&width=800"
+  ],
+  "description": "The Beatles' iconic final studio album, newly mixed by Giles Martin. The Special Edition Deluxe 2CD includes a disc of outtake highlights and a 40-page booklet, released alongside Peter Jackson's documentary \"Get Back.\""
+}

@@ -1,0 +1,22 @@
+backend:
+  name: github
+  repo: Happens1437/CD5600
+  branch: main
+
+media_folder: "admin/uploads"
+public_folder: "/admin/uploads"
+
+collections:
+  - name: "cds"
+    label: "CD Catalog"
+    folder: "data/cds"
+    create: true
+    delete: true
+    slug: "{{fields.artist}}-{{fields.album}}"
+    identifier_field: album
+    fields:
+      - { label: "Artist", name: "artist", widget: "string" }
+      - { label: "Album", name: "album", widget: "string" }
+      - { label: "Price (GEL)", name: "price", widget: "number", value_type: "float" }
+      - { label: "Image URLs", name: "imgs", widget: "list", hint: "Paste one or more direct image links. The first one is used as the main cover." }
+      - { label: "Description", name: "description", widget: "text" }

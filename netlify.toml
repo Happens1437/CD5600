@@ -1,0 +1,18 @@
+[build]
+  command = "node scripts/build.js"
+  publish = "."
+
+[[redirects]]
+  from = "/shop"
+  to = "/#catalog"
+  status = 301
+
+[[redirects]]
+  from = "/about"
+  to = "/#about"
+  status = 301
+
+[[redirects]]
+  from = "/contact"
+  to = "/#socials"
+  status = 301
