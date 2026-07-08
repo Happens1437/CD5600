@@ -14,7 +14,7 @@ const translations = {
         sort_default: 'Sort: Default', sort_low_high: 'Price: Low-High', sort_high_low: 'Price: High-Low',
         search_placeholder: 'Search artist or album...',
         secure_purchase: 'Secure Purchase', add_to_cart: 'Add to Cart', back_to_catalog: 'Back to Catalog',
-        unit_price: 'Unit Price', analyze_mastering: '✨ Analyze Mastering Quality',
+        unit_price: 'Unit Price',
         shopping_cart: 'Shopping Cart', total_balance: 'Total Balance', finalize_checkout: 'Finalize Checkout',
         cart_empty: 'Your inventory is empty', follow_instagram: 'Follow on Instagram',
         view_instagram: 'View on Instagram', about_title: 'About Us.', faq_title: 'F.A.Q Vault.',
@@ -59,7 +59,7 @@ const translations = {
         sort_default: 'დახარისხება: ნაგულისხმევი', sort_low_high: 'ფასი: ზრდადი', sort_high_low: 'ფასი: კლებადი',
         search_placeholder: 'მოძებნე არტისტი ან ალბომი...',
         secure_purchase: 'შეძენა', add_to_cart: 'კალათაში დამატება', back_to_catalog: 'კატალოგში დაბრუნება',
-        unit_price: 'ფასი', analyze_mastering: '✨ ხარისხის ანალიზი',
+        unit_price: 'ფასი',
         shopping_cart: 'კალათა', total_balance: 'სულ', finalize_checkout: 'შეკვეთის დასრულება',
         cart_empty: 'კალათა ცარიელია', follow_instagram: 'Instagram-ზე გამოწერა',
         view_instagram: 'Instagram-ზე ნახვა', about_title: 'ჩვენს შესახებ.', faq_title: 'კითხვა-პასუხი.',
@@ -321,12 +321,7 @@ window.buildProductDetailHtml = function(product, id) {
                 <p class="text-xl md:text-2xl text-white/40 uppercase font-light tracking-tighter mb-8">${product.artist}</p>
                 <div class="glass p-6 md:p-8 border-l-4 border-[#ffcc00] mb-8 relative">
                     <p class="text-sm leading-relaxed text-white/80">${product.description || 'Standard high-fidelity master recording.'}</p>
-                    <button onclick="askAIAbout('${id}')" class="mt-6 w-full bg-white/5 border border-white/10 text-white px-6 py-3 font-bold uppercase tracking-widest hover:border-[#ffcc00] hover:text-[#ffcc00] transition-all text-xs flex items-center justify-center gap-2">
-                        <i class="fas fa-sparkles"></i> ${window.t('analyze_mastering')}
-                    </button>
-                    <div id="ai-album-analysis-${id}" class="mt-4 text-xs text-white/80 leading-relaxed font-mono hidden bg-black/40 p-4 border border-[#ffcc00]/20 rounded-sm"></div>
                 </div>
-                ${tracklistBlock}
                 <div class="flex flex-col sm:flex-row items-start sm:items-end gap-6 md:gap-8 mb-12">
                     <div>
                         <p class="text-[9px] text-white/30 uppercase tracking-[0.3em] mb-1">${window.t('unit_price')}</p>
@@ -334,6 +329,7 @@ window.buildProductDetailHtml = function(product, id) {
                     </div>
                     ${purchaseAction}
                 </div>
+                ${tracklistBlock}
             </div>
         </div>
         ${relatedBlock}
@@ -555,21 +551,6 @@ window.askAI = async function() {
     } catch (e) {
         document.getElementById(msgId).innerHTML = `<span class="text-red-500 font-bold">Connection to mainframe lost. (Error 401: Unauthorized)</span>`;
         window.chatMessages.pop();
-    }
-}
-
-window.askAIAbout = async function(id) {
-    const product = getProduct(id);
-    const div = document.getElementById(`ai-album-analysis-${id}`);
-    div.classList.remove('hidden');
-    div.innerHTML = '<span class="animate-pulse text-[#ffcc00]">✨ Analyzing master recording profile...</span>';
-    const prompt = `Write a short, edgy, 2-sentence audiophile review focusing on the mastering quality, instrumentation, and physical CD fidelity of the album "${product.album}" by ${product.artist}. Frame it as an exclusive insight from the CD5600 vault.`;
-    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-    try {
-        const text = await fetchGeminiWithRetry(payload);
-        div.innerHTML = `<span class="text-[#ffcc00] uppercase font-bold tracking-widest mb-2 block">✨ Master Analysis Complete:</span> <span class="text-white">${text}</span>`;
-    } catch (e) {
-        div.innerHTML = `<span class="text-red-500 font-bold">Analysis failed. Network error.</span>`;
     }
 }
 
