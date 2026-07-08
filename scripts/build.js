@@ -26,6 +26,10 @@ const catalog = files.map(file => {
     let n = 2;
     while (usedIds.has(id)) { id = `${base}-${n++}`; }
     usedIds.add(id);
+    if (!item.dateAdded || isNaN(Date.parse(item.dateAdded))) {
+        console.warn(`WARNING: ${file} has no valid dateAdded, treating as oldest`);
+        item.dateAdded = new Date(0).toISOString();
+    }
     return { id, ...item };
 });
 

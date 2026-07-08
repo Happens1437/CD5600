@@ -389,7 +389,8 @@ window.renderAll = function() {
     if (carousel) carousel.innerHTML = randomCatalog.slice(0, 6).map(p => window.cardHtml(p, true)).join('');
     window.applyFilters();
     if (newArr && fullCatalog.length > 0) {
-        newArr.innerHTML = randomCatalog.slice(6, 10).map(p => `
+        const newestFirst = [...fullCatalog].sort((a, b) => new Date(b.dateAdded || 0) - new Date(a.dateAdded || 0));
+        newArr.innerHTML = newestFirst.slice(0, 4).map(p => `
             <div class="glass p-4 md:p-8 flex flex-col sm:flex-row gap-4 md:gap-8 items-center border-l-4 md:border-l-8 border-[#ffcc00] group cursor-pointer" onclick="showProductDetail('${p.id}')">
                 <div class="w-24 h-24 md:w-40 md:h-40 bg-white/10 flex-shrink-0 rounded-sm overflow-hidden">
                     <img src="${window.getImg(p)}" onerror="this.src='https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80'" class="w-full h-full object-cover">

@@ -22,3 +22,4 @@ collections:
       - { label: "Price (GEL)", name: "price", widget: "number", value_type: "float" }
       - { label: "Image URLs", name: "imgs", widget: "list", hint: "Paste one or more direct image links. The first one is used as the main cover." }
       - { label: "Description", name: "description", widget: "text" }
+      - { label: "Date Added", name: "dateAdded", widget: "datetime", default: "{{now}}", picker_utc: true, hint: "Auto-filled with today's date. Leave as-is unless you're backdating an entry — this drives the 'New Additions' section on the site." }
