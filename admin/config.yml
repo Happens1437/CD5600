@@ -24,3 +24,4 @@ collections:
       - { label: "Description", name: "description", widget: "text" }
       - { label: "Date Added", name: "dateAdded", widget: "datetime", default: "{{now}}", picker_utc: true, hint: "Auto-filled with today's date. Leave as-is unless you're backdating an entry — this drives the 'New Additions' section on the site." }
       - { label: "In Stock", name: "inStock", widget: "boolean", default: true, hint: "Uncheck when this CD sells on Extra.ge — it stays on the site marked Sold Out instead of disappearing." }
+      - { label: "Tracklist (optional)", name: "tracklist", widget: "list", required: false, hint: "Leave empty — the site auto-fetches the tracklist from Deezer at build time. Only fill this in to fix a wrong or missing match." }

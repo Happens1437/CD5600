@@ -49,7 +49,7 @@ const translations = {
         faq_a5: 'Yes, all our new imports arrive factory sealed so you get the full unboxing experience.',
         faq_q6: 'What is the return policy?',
         faq_a6: 'If your CD arrives cracked, skips, or has a manufacturing defect — we will replace it or give you a full refund. Sealed CDs can only be returned unopened. We do not accept returns for "ordered by mistake" or "changed my mind."',
-        sold_out: 'Sold Out', you_might_also_like: 'You Might Also Like',
+        sold_out: 'Sold Out', you_might_also_like: 'You Might Also Like', tracklist: 'Tracklist',
     },
     ka: {
         nav_home: 'მთავარი', nav_catalog: 'კატალოგი', nav_socials: 'სოციალები', nav_about: 'ჩვენს შესახებ', nav_faq: 'კითხვები',
@@ -94,7 +94,7 @@ const translations = {
         faq_a5: 'დიახ, ჩვენი ყველა ახალი იმპორტი ჩამოდის ქარხნულად დალუქული, ასე რომ თქვენ მიიღებთ სრულ ავთენტურ გახსნის გამოცდილებას.',
         faq_q6: 'რა არის დაბრუნების პოლიტიკა?',
         faq_a6: 'დაზიანებული ან დეფექტური ნივთები: ჩვენ დაგიბრუნებთ ნივთს და თანხას, თუ მიღებული CD გატეხილია, გამოტოვებულია ან აქვს საწარმოო დეფექტი. შემოგთავაზებთ ჩანაცვლებას (თუ მარაგშია) ან სრულ ანაზღაურებას. ახალი/დალუქული CD-ები უნდა დაბრუნდეს გაუხსნელ შეფუთვაში. ბეჭდის დაზიანების შემდეგ ვერ მივიღებთ დაბრუნებას, თუ დისკი დეფექტური არ არის. მომხმარებლის შეცდომა: ჩვენ არ დავაბრუნებთ ნივთებს რომელიც შეცდომით არის შეკვეთილი.',
-        sold_out: 'გაყიდულია', you_might_also_like: 'ასევე შეიძლება მოგეწონოთ',
+        sold_out: 'გაყიდულია', you_might_also_like: 'ასევე შეიძლება მოგეწონოთ', tracklist: 'ტრეკლისტი',
     }
 };
 
@@ -179,6 +179,12 @@ window.applyTranslations = function() {
 
 window.getImg = function(product) {
     return (product.imgs && product.imgs.length > 0) ? product.imgs[0] : '';
+}
+
+window.escapeHtml = function(str) {
+    const div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
 }
 
 window.showToast = function(msg) {
@@ -273,6 +279,18 @@ window.buildProductDetailHtml = function(product, id) {
                         ${window.t('secure_purchase')}
                     </a>`;
 
+    const tracklistBlock = (product.tracklist && product.tracklist.length > 0) ? `
+        <div class="mb-8">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">${window.t('tracklist')}</h3>
+            <ol class="space-y-1 text-sm text-white/80">
+                ${product.tracklist.map((track, i) => `
+                <li class="flex gap-3 py-1.5 border-b border-white/5">
+                    <span class="text-[#ffcc00]/60 font-bold w-6 flex-shrink-0">${String(i + 1).padStart(2, '0')}</span>
+                    <span>${window.escapeHtml(track)}</span>
+                </li>`).join('')}
+            </ol>
+        </div>` : '';
+
     const related = window.getRelatedProducts(product, id);
     const relatedBlock = related.length > 0 ? `
         <div class="mt-20">
@@ -308,6 +326,7 @@ window.buildProductDetailHtml = function(product, id) {
                     </button>
                     <div id="ai-album-analysis-${id}" class="mt-4 text-xs text-white/80 leading-relaxed font-mono hidden bg-black/40 p-4 border border-[#ffcc00]/20 rounded-sm"></div>
                 </div>
+                ${tracklistBlock}
                 <div class="flex flex-col sm:flex-row items-start sm:items-end gap-6 md:gap-8 mb-12">
                     <div>
                         <p class="text-[9px] text-white/30 uppercase tracking-[0.3em] mb-1">${window.t('unit_price')}</p>
