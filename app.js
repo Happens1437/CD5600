@@ -459,6 +459,7 @@ window.renderAll = function() {
     const newArr = document.getElementById('new-arrivals-list');
     const randomCatalog = [...fullCatalog].sort(() => 0.5 - Math.random());
     if (carousel) carousel.innerHTML = randomCatalog.slice(0, 6).map(p => window.cardHtml(p, true)).join('');
+    window.renderBeosound();
     window.applyFilters();
     if (newArr && fullCatalog.length > 0) {
         const newestFirst = [...fullCatalog].sort((a, b) => new Date(b.dateAdded || 0) - new Date(a.dateAdded || 0));
@@ -479,6 +480,46 @@ window.renderAll = function() {
 
 window.scrollCarousel = function(dir) {
     document.getElementById('home-carousel').scrollBy({ left: dir * 300, behavior: 'smooth' });
+}
+
+window.beosoundQueue = [];
+window.beosoundIndex = 0;
+window.beosoundTimer = null;
+
+window.renderBeosound = function() {
+    const rack = document.getElementById('beosound-rack');
+    if (!rack || fullCatalog.length === 0) return;
+    const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
+    window.beosoundQueue = [...fullCatalog].sort(() => 0.5 - Math.random()).slice(0, 6);
+    rack.innerHTML = window.beosoundQueue.map((p, i) => `
+        <div class="beosound-disc ${i === 0 ? 'active' : ''}" data-index="${i}">
+            <div class="beosound-disc-inner" style="background-image: url('${window.getImg(p) || fallbackImg}')"></div>
+            <div class="beosound-disc-shine"></div>
+            <div class="beosound-disc-hub"><span>CD<br>5600</span></div>
+        </div>
+    `).join('');
+    window.beosoundIndex = 0;
+    window.updateBeosoundLabel();
+    window.beosoundCycle();
+}
+
+window.updateBeosoundLabel = function() {
+    const p = window.beosoundQueue[window.beosoundIndex];
+    const label = document.getElementById('beosound-now-playing');
+    if (label && p) label.textContent = `${p.artist} — ${p.album}`;
+}
+
+window.beosoundCycle = function() {
+    clearTimeout(window.beosoundTimer);
+    window.beosoundTimer = setTimeout(() => {
+        const discs = document.querySelectorAll('#beosound-rack .beosound-disc');
+        if (discs.length === 0) return;
+        discs[window.beosoundIndex]?.classList.remove('active');
+        window.beosoundIndex = (window.beosoundIndex + 1) % window.beosoundQueue.length;
+        discs[window.beosoundIndex]?.classList.add('active');
+        window.updateBeosoundLabel();
+        window.beosoundCycle();
+    }, 5500);
 }
 
 window.renderSocials = async function() {
