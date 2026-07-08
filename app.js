@@ -49,6 +49,7 @@ const translations = {
         faq_a5: 'Yes, all our new imports arrive factory sealed so you get the full unboxing experience.',
         faq_q6: 'What is the return policy?',
         faq_a6: 'If your CD arrives cracked, skips, or has a manufacturing defect — we will replace it or give you a full refund. Sealed CDs can only be returned unopened. We do not accept returns for "ordered by mistake" or "changed my mind."',
+        sold_out: 'Sold Out', you_might_also_like: 'You Might Also Like',
     },
     ka: {
         nav_home: 'მთავარი', nav_catalog: 'კატალოგი', nav_socials: 'სოციალები', nav_about: 'ჩვენს შესახებ', nav_faq: 'კითხვები',
@@ -93,6 +94,7 @@ const translations = {
         faq_a5: 'დიახ, ჩვენი ყველა ახალი იმპორტი ჩამოდის ქარხნულად დალუქული, ასე რომ თქვენ მიიღებთ სრულ ავთენტურ გახსნის გამოცდილებას.',
         faq_q6: 'რა არის დაბრუნების პოლიტიკა?',
         faq_a6: 'დაზიანებული ან დეფექტური ნივთები: ჩვენ დაგიბრუნებთ ნივთს და თანხას, თუ მიღებული CD გატეხილია, გამოტოვებულია ან აქვს საწარმოო დეფექტი. შემოგთავაზებთ ჩანაცვლებას (თუ მარაგშია) ან სრულ ანაზღაურებას. ახალი/დალუქული CD-ები უნდა დაბრუნდეს გაუხსნელ შეფუთვაში. ბეჭდის დაზიანების შემდეგ ვერ მივიღებთ დაბრუნებას, თუ დისკი დეფექტური არ არის. მომხმარებლის შეცდომა: ჩვენ არ დავაბრუნებთ ნივთებს რომელიც შეცდომით არის შეკვეთილი.',
+        sold_out: 'გაყიდულია', you_might_also_like: 'ასევე შეიძლება მოგეწონოთ',
     }
 };
 
@@ -250,11 +252,9 @@ window.updateCartUI = function() {
     document.getElementById('cart-total').innerText = `₾${total.toFixed(2)}`;
 }
 
-window.showProductDetail = async function(id) {
-    const product = window.getProduct(id);
-    const mount = document.getElementById('detail-mount');
+window.buildProductDetailHtml = function(product, id) {
     const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
-    window.showPage('product-detail');
+    const soldOut = product.inStock === false;
 
     const imgs = (product.imgs && product.imgs.length > 0) ? product.imgs : [fallbackImg];
     const thumbs = imgs.length > 1 ? `
@@ -267,14 +267,30 @@ window.showProductDetail = async function(id) {
             `).join('')}
         </div>` : '';
 
-    mount.innerHTML = `
+    const purchaseAction = soldOut
+        ? `<span class="w-full sm:w-auto bg-white/5 border border-white/10 text-white/40 px-12 py-5 font-black uppercase tracking-widest inline-block text-center cursor-not-allowed">${window.t('sold_out')}</span>`
+        : `<a href="https://extra.ge/seller/cd-5600/419" target="_blank" class="w-full sm:w-auto bg-[#ffcc00] text-black px-12 py-5 font-black uppercase tracking-widest hover:bg-white transform hover:-translate-y-1 inline-block text-center">
+                        ${window.t('secure_purchase')}
+                    </a>`;
+
+    const related = window.getRelatedProducts(product, id);
+    const relatedBlock = related.length > 0 ? `
+        <div class="mt-20">
+            <h3 class="text-2xl md:text-3xl font-black uppercase italic mb-6">${window.t('you_might_also_like')}</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                ${related.map(p => window.cardHtml(p, false)).join('')}
+            </div>
+        </div>` : '';
+
+    return `
         <div class="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
             <div>
                 <button onclick="showPage('catalog')" class="text-xs font-bold uppercase tracking-widest text-[#ffcc00] mb-8 hover:underline">
                     <i class="fas fa-arrow-left mr-2"></i> ${window.t('back_to_catalog')}
                 </button>
-                <div class="aspect-square glass p-4 border-2 border-white/5">
-                    <img id="main-img-${id}" src="${imgs[0]}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover border border-white/10">
+                <div class="aspect-square glass p-4 border-2 border-white/5 relative">
+                    ${soldOut ? `<div class="absolute top-6 left-6 z-10 bg-black/80 border border-white/20 text-white/80 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest">${window.t('sold_out')}</div>` : ''}
+                    <img id="main-img-${id}" src="${imgs[0]}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover border border-white/10 ${soldOut ? 'opacity-40' : ''}">
                 </div>
                 ${thumbs}
             </div>
@@ -297,13 +313,26 @@ window.showProductDetail = async function(id) {
                         <p class="text-[9px] text-white/30 uppercase tracking-[0.3em] mb-1">${window.t('unit_price')}</p>
                         <p class="text-4xl md:text-5xl font-black text-[#ffcc00]">₾${product.price.toFixed(2)}</p>
                     </div>
-                    <a href="https://extra.ge/seller/cd-5600/419" target="_blank" class="w-full sm:w-auto bg-[#ffcc00] text-black px-12 py-5 font-black uppercase tracking-widest hover:bg-white transform hover:-translate-y-1 inline-block text-center">
-                        ${window.t('secure_purchase')}
-                    </a>
+                    ${purchaseAction}
                 </div>
             </div>
         </div>
+        ${relatedBlock}
     `;
+}
+
+window.getRelatedProducts = function(product, id) {
+    const others = fullCatalog.filter(p => p.id !== id);
+    const sameArtist = others.filter(p => p.artist === product.artist);
+    const rest = others.filter(p => p.artist !== product.artist).sort(() => 0.5 - Math.random());
+    return [...sameArtist, ...rest].slice(0, 4);
+}
+
+window.showProductDetail = async function(id) {
+    const product = window.getProduct(id);
+    const mount = document.getElementById('detail-mount');
+    window.showPage('product-detail', id);
+    mount.innerHTML = window.buildProductDetailHtml(product, id);
 }
 
 window.toggleAI = function() {
@@ -317,14 +346,38 @@ window.toggleAI = function() {
     }
 }
 
-window.showPage = function(id) {
+const PAGE_PATHS = { home: '/', catalog: '/catalog', socials: '/socials', about: '/about', faq: '/faq', how: '/how-to-buy', cart: '/cart' };
+const PATH_PAGES = Object.fromEntries(Object.entries(PAGE_PATHS).map(([page, path]) => [path, page]));
+
+function normalizePath(p) {
+    return p.length > 1 && p.endsWith('/') ? p.slice(0, -1) : p;
+}
+
+window.showPage = function(id, productId) {
     document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     const n = document.getElementById(`nav-${id}`);
     if (n) n.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const path = id === 'product-detail' ? `/cd/${productId}` : (PAGE_PATHS[id] || '/');
+    if (normalizePath(location.pathname) !== path) {
+        history.pushState({ page: id, productId }, '', path);
+    }
 }
+
+window.renderRoute = function(path) {
+    const cdMatch = normalizePath(path).match(/^\/cd\/([^/]+)$/);
+    if (cdMatch && window.getProduct(cdMatch[1]).artist !== 'Unknown') {
+        window.showProductDetail(cdMatch[1]);
+        return;
+    }
+    const page = PATH_PAGES[normalizePath(path)] || 'home';
+    window.showPage(page);
+}
+
+window.addEventListener('popstate', () => window.renderRoute(location.pathname));
 
 window.populateFilters = function() {
     const artistSelect = document.getElementById('filter-artist');
@@ -363,12 +416,16 @@ window.applyFilters = function() {
 window.cardHtml = function(p, isC) {
     const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
     const imgSrc = window.getImg(p);
+    const soldOut = p.inStock === false;
     return `
     <div class="cd-card glass p-3 md:p-4 rounded-sm group cursor-pointer ${isC ? 'min-w-[240px] md:min-w-[320px]' : ''}" onclick="showProductDetail('${p.id}')">
         <div class="relative mb-3 md:mb-4 aspect-square overflow-hidden bg-white/5">
-            <img src="${imgSrc}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover">
+            <img src="${imgSrc}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover ${soldOut ? 'opacity-40' : ''}">
+            ${soldOut ? `<div class="absolute top-2 left-2 bg-black/80 border border-white/20 text-white/80 px-2 py-1 text-[8px] md:text-[10px] font-black uppercase tracking-widest">${window.t('sold_out')}</div>` : ''}
             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3">
-                <button onclick="addToCart(event, '${p.id}')" class="bg-[#ffcc00] text-black w-3/4 py-2 text-[10px] font-black uppercase">${window.t('add_to_cart')}</button>
+                ${soldOut
+                    ? `<span class="bg-white/10 text-white/50 w-3/4 py-2 text-[10px] font-black uppercase text-center">${window.t('sold_out')}</span>`
+                    : `<button onclick="addToCart(event, '${p.id}')" class="bg-[#ffcc00] text-black w-3/4 py-2 text-[10px] font-black uppercase">${window.t('add_to_cart')}</button>`}
             </div>
         </div>
         <div class="flex justify-between items-start">
@@ -505,4 +562,5 @@ window.onload = async () => {
     await window.renderSocials();
     window.updateCartUI();
     window.applyTranslations();
+    window.renderRoute(location.pathname);
 };

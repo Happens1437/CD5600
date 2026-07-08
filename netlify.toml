@@ -4,15 +4,15 @@
 
 [[redirects]]
   from = "/shop"
-  to = "/#catalog"
-  status = 301
-
-[[redirects]]
-  from = "/about"
-  to = "/#about"
+  to = "/catalog"
   status = 301
 
 [[redirects]]
   from = "/contact"
-  to = "/#socials"
+  to = "/socials"
   status = 301
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

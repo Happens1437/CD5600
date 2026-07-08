@@ -1,14 +1,32 @@
-// Netlify build step: assembles data/cds/*.json into data/catalog.json,
-// regenerates llms.txt from llms.template.txt, and injects a plain-text
-// catalog listing into index.html for non-JS crawlers.
+// Netlify build step:
+// - assembles data/cds/*.json into data/catalog.json (fetched by app.js at runtime)
+// - regenerates llms.txt from llms.template.txt with a full inventory listing
+// - writes the root index.html with the site-wide catalog SSR block for crawlers
+// - generates one static page per CD at cd/<id>/index.html with product-specific
+//   meta/OG/Twitter/JSON-LD tags (for link previews and non-JS crawlers) and a
+//   pre-rendered detail block; app.js takes over once it loads.
 const fs = require('fs');
 const path = require('path');
 
 const root = path.join(__dirname, '..');
 const cdsDir = path.join(root, 'data', 'cds');
+const templatePath = path.join(root, 'index.html');
 
 function slugify(s) {
     return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function truncate(str, n) {
+    if (!str) return '';
+    return str.length > n ? str.slice(0, n - 1).trimEnd() + '…' : str;
+}
+
+function jsonLd(obj) {
+    return JSON.stringify(obj).replace(/</g, '\\u003c');
 }
 
 const allFiles = fs.readdirSync(cdsDir);
@@ -30,28 +48,96 @@ const catalog = files.map(file => {
         console.warn(`WARNING: ${file} has no valid dateAdded, treating as oldest`);
         item.dateAdded = new Date(0).toISOString();
     }
+    if (typeof item.inStock !== 'boolean') item.inStock = true;
     return { id, ...item };
 });
 
 fs.writeFileSync(path.join(root, 'data', 'catalog.json'), JSON.stringify(catalog, null, 2));
 console.log(`Wrote ${catalog.length} items to data/catalog.json`);
 
-const catalogText = catalog
-    .map(c => `* ${c.artist} - ${c.album} - ${c.price.toFixed(2)} GEL`)
+const catalogTextPlain = catalog
+    .map(c => `* ${c.artist} - ${c.album} - ${c.price.toFixed(2)} GEL${c.inStock === false ? ' (sold out)' : ''}`)
     .join('\n');
 
 const llmsTemplate = fs.readFileSync(path.join(root, 'llms.template.txt'), 'utf8');
-fs.writeFileSync(path.join(root, 'llms.txt'), llmsTemplate.replace('{{CATALOG}}', catalogText));
+fs.writeFileSync(path.join(root, 'llms.txt'), llmsTemplate.replace('{{CATALOG}}', catalogTextPlain));
 console.log('Wrote llms.txt');
 
-const indexPath = path.join(root, 'index.html');
-let html = fs.readFileSync(indexPath, 'utf8');
 const ssrList = catalog
-    .map(c => `<p>${c.artist} – ${c.album} – ${c.price.toFixed(2)} GEL</p>`)
+    .map(c => `<p>${escapeHtml(c.artist)} – ${escapeHtml(c.album)} – ${c.price.toFixed(2)} GEL${c.inStock === false ? ' (Sold Out)' : ''}</p>`)
     .join('\n');
-html = html.replace(
-    /<!-- CATALOG_SSR -->[\s\S]*?<!-- \/CATALOG_SSR -->/,
-    `<!-- CATALOG_SSR -->${ssrList}<!-- /CATALOG_SSR -->`
-);
-fs.writeFileSync(indexPath, html);
-console.log('Injected catalog text into index.html');
+
+function injectCatalogSsr(html) {
+    return html.replace(
+        /<!-- CATALOG_SSR -->[\s\S]*?<!-- \/CATALOG_SSR -->/,
+        `<!-- CATALOG_SSR -->${ssrList}<!-- /CATALOG_SSR -->`
+    );
+}
+
+const template = fs.readFileSync(templatePath, 'utf8');
+
+// --- Root index.html ---
+let rootHtml = injectCatalogSsr(template);
+rootHtml = rootHtml.replace('__HOME_ACTIVE__', 'active').replace('__PRODUCT_ACTIVE__', '');
+fs.writeFileSync(templatePath, rootHtml);
+console.log('Wrote index.html');
+
+// --- Per-product static pages ---
+const cdDir = path.join(root, 'cd');
+fs.rmSync(cdDir, { recursive: true, force: true });
+fs.mkdirSync(cdDir, { recursive: true });
+
+for (const item of catalog) {
+    const title = `${item.album} by ${item.artist} | CD5600`;
+    const desc = truncate(item.description || `${item.album} by ${item.artist}, available at CD5600.`, 160);
+    const image = (item.imgs && item.imgs[0]) || 'https://www.cd5600.shop/favicon.png';
+    const url = `https://www.cd5600.shop/cd/${item.id}`;
+    const availability = item.inStock === false ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock';
+
+    const metaBlock = `<title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeHtml(desc)}">
+    <link rel="canonical" href="${url}">
+    <meta property="og:type" content="product">
+    <meta property="og:site_name" content="CD5600">
+    <meta property="og:title" content="${escapeHtml(title)}">
+    <meta property="og:description" content="${escapeHtml(desc)}">
+    <meta property="og:image" content="${escapeHtml(image)}">
+    <meta property="og:url" content="${url}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${escapeHtml(title)}">
+    <meta name="twitter:description" content="${escapeHtml(desc)}">
+    <meta name="twitter:image" content="${escapeHtml(image)}">
+    <script type="application/ld+json">${jsonLd({
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: `${item.album} by ${item.artist}`,
+        image,
+        description: desc,
+        offers: {
+            '@type': 'Offer',
+            priceCurrency: 'GEL',
+            price: item.price,
+            availability,
+            url
+        }
+    })}</script>`;
+
+    const ssrDetail = `<img src="${escapeHtml(image)}" alt="${escapeHtml(item.album)} by ${escapeHtml(item.artist)}" style="max-width:300px">
+    <h1>${escapeHtml(item.album)}</h1>
+    <p>${escapeHtml(item.artist)}</p>
+    <p>₾${item.price.toFixed(2)}${item.inStock === false ? ' — Sold Out' : ''}</p>
+    <p>${escapeHtml(item.description || '')}</p>`;
+
+    let page = injectCatalogSsr(template);
+    page = page.replace('__HOME_ACTIVE__', '').replace('__PRODUCT_ACTIVE__', 'active');
+    page = page.replace(/<!-- PRODUCT_META_START -->[\s\S]*?<!-- PRODUCT_META_END -->/, metaBlock);
+    page = page.replace(
+        /<!-- PRODUCT_SSR_START -->[\s\S]*?<!-- PRODUCT_SSR_END -->/,
+        `<!-- PRODUCT_SSR_START -->${ssrDetail}<!-- PRODUCT_SSR_END -->`
+    );
+
+    const productDir = path.join(cdDir, item.id);
+    fs.mkdirSync(productDir, { recursive: true });
+    fs.writeFileSync(path.join(productDir, 'index.html'), page);
+}
+console.log(`Wrote ${catalog.length} product pages to cd/`);
