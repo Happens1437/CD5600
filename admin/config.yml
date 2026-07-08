@@ -12,6 +12,8 @@ collections:
     folder: "data/cds"
     create: true
     delete: true
+    extension: "json"
+    format: "json"
     slug: "{{fields.artist}}-{{fields.album}}"
     identifier_field: album
     fields:

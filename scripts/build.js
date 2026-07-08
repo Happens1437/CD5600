@@ -11,7 +11,12 @@ function slugify(s) {
     return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
-const files = fs.readdirSync(cdsDir).filter(f => f.endsWith('.json')).sort();
+const allFiles = fs.readdirSync(cdsDir);
+const skipped = allFiles.filter(f => !f.endsWith('.json'));
+if (skipped.length > 0) {
+    console.warn(`WARNING: ignoring non-JSON files in data/cds/ (won't appear on the site): ${skipped.join(', ')}`);
+}
+const files = allFiles.filter(f => f.endsWith('.json')).sort();
 
 const usedIds = new Set();
 const catalog = files.map(file => {
