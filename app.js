@@ -491,7 +491,7 @@ window.renderBeosound = function() {
     if (!rack || fullCatalog.length === 0) return;
     const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
     window.beosoundQueue = [...fullCatalog].sort(() => 0.5 - Math.random()).slice(0, 6);
-    rack.innerHTML = window.beosoundQueue.map((p, i) => `
+    rack.innerHTML = '<div class="beosound-led"></div>' + window.beosoundQueue.map((p, i) => `
         <div class="beosound-disc ${i === 0 ? 'active' : ''}" data-index="${i}">
             <div class="beosound-disc-inner" style="background-image: url('${window.getImg(p) || fallbackImg}')"></div>
             <div class="beosound-disc-shine"></div>

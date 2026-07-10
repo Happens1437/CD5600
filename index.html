@@ -128,37 +128,111 @@
             }
         }
 
-        .beosound-rack {
+        .beosound-unit {
             display: flex;
-            align-items: flex-end;
-            gap: 5px;
+            width: 150px;
+            height: 430px;
+            border-radius: 16px;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.9);
+            overflow: hidden;
         }
 
         @media (min-width: 768px) {
-            .beosound-rack { gap: 8px; }
+            .beosound-unit { width: 220px; height: 600px; }
+        }
+
+        .beosound-wood {
+            position: relative;
+            width: 40%;
+            flex-shrink: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                #c69a66 0px, #c69a66 4px,
+                #6b4a2e 4px, #6b4a2e 5px,
+                #b3854f 5px, #b3854f 8px,
+                #7d5738 8px, #7d5738 9px,
+                #d1a877 9px, #d1a877 12px,
+                #6b4a2e 12px, #6b4a2e 13px
+            );
+            box-shadow: inset -8px 0 16px rgba(0,0,0,0.55), inset 0 6px 10px rgba(255,255,255,0.12), inset 0 -6px 10px rgba(0,0,0,0.35);
+        }
+
+        .beosound-wood::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 3px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.2) 60%, rgba(255,255,255,0.08));
+            z-index: 2;
+        }
+
+        .beosound-wood::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.6%22/%3E%3C/svg%3E');
+            mix-blend-mode: multiply;
+            opacity: 0.35;
+        }
+
+        .beosound-glass {
+            position: relative;
+            flex: 1;
+            background: linear-gradient(180deg, #050505, #0f0f0f 50%, #050505);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            padding: 14px 0;
+        }
+
+        .beosound-glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 18%, rgba(255,255,255,0) 82%, rgba(255,255,255,0.06) 100%);
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        .beosound-led {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #ff3b3b;
+            box-shadow: 0 0 6px 1px rgba(255,59,59,0.9);
+            animation: beosound-blink 3s ease-in-out infinite;
+            z-index: 31;
+        }
+
+        @keyframes beosound-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
         }
 
         .beosound-disc {
             position: relative;
             flex-shrink: 0;
-            width: 20px;
-            height: 20px;
-            border-radius: 5px;
-            opacity: 0.45;
-            margin-top: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-            transition: width 0.9s cubic-bezier(.34,1.56,.64,1),
-                        height 0.9s cubic-bezier(.34,1.56,.64,1),
-                        border-radius 0.9s ease,
+            opacity: 0.7;
+            background: #111;
+            border: 3px solid #1c1c1c;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.06);
+            transition: transform 0.9s cubic-bezier(.34,1.56,.64,1),
                         opacity 0.9s ease,
-                        margin-top 0.9s cubic-bezier(.34,1.56,.64,1),
                         box-shadow 0.9s ease;
         }
 
         @media (min-width: 768px) {
-            .beosound-disc { width: 40px; height: 40px; }
+            .beosound-disc { width: 68px; height: 68px; border-width: 4px; }
         }
 
         .beosound-disc-inner {
@@ -190,15 +264,15 @@
         }
 
         .beosound-disc-hub span {
-            width: 32%;
-            height: 32%;
+            width: 30%;
+            height: 30%;
             border-radius: 50%;
             background: #000;
             border: 2px solid #ffcc00;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 5px;
+            font-size: 4px;
             font-weight: 900;
             color: #ffcc00;
             text-align: center;
@@ -207,30 +281,19 @@
         }
 
         .beosound-disc.active {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
             opacity: 1;
-            margin-top: -24px;
+            transform: scale(1.32);
             z-index: 20;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
+            box-shadow: 0 10px 26px rgba(0,0,0,0.9), 0 0 0 2px rgba(255,204,0,0.5);
             animation: beosound-spin 7s linear infinite;
-        }
-
-        @media (min-width: 768px) {
-            .beosound-disc.active {
-                width: 190px;
-                height: 190px;
-                margin-top: -44px;
-            }
         }
 
         .beosound-disc.active .beosound-disc-shine { opacity: 0.35; }
         .beosound-disc.active .beosound-disc-hub { opacity: 1; }
-        .beosound-disc.active .beosound-disc-hub span { font-size: 6px; }
+        .beosound-disc.active .beosound-disc-hub span { font-size: 5px; }
 
         @media (min-width: 768px) {
-            .beosound-disc.active .beosound-disc-hub span { font-size: 11px; }
+            .beosound-disc.active .beosound-disc-hub span { font-size: 8px; }
         }
 
         @keyframes beosound-spin {
@@ -383,16 +446,19 @@
                         </div>
                     </div>
                     
-                    <div class="relative flex justify-center items-center mt-8 lg:mt-0 z-20">
-                        <div class="relative w-full max-w-[340px] md:max-w-[600px] h-[125px] md:h-[170px] bg-gradient-to-b from-[#2e2e2e] via-[#181818] to-[#0a0a0a] rounded-2xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex items-end justify-between gap-2 md:gap-3 px-4 md:px-6 pb-5 md:pb-7 overflow-visible transition-all duration-700 hover:scale-[1.02]">
-                            <div class="absolute top-3 md:top-4 left-1/2 -translate-x-1/2 text-[7px] md:text-[9px] font-mono text-white/30 tracking-[0.4em] uppercase border border-white/10 px-2 md:px-3 py-1 rounded bg-black/40 shadow-inner">CD5600 Beosound</div>
-
-                            <div class="beosound-rack" id="beosound-rack"></div>
-
-                            <div class="text-right max-w-[80px] md:max-w-[110px] flex-shrink-0 pointer-events-none z-30 mb-1 md:mb-2">
-                                <div class="text-[6px] md:text-[8px] font-mono text-white/30 tracking-widest uppercase mb-0.5">Now Playing</div>
-                                <div id="beosound-now-playing" class="text-[7px] md:text-[10px] font-mono text-[#ffcc00] tracking-widest uppercase truncate">—</div>
+                    <div class="relative flex flex-col justify-center items-center mt-8 lg:mt-0 z-20 transition-all duration-700 hover:scale-[1.02]">
+                        <div class="relative">
+                            <div class="absolute left-[30%] -right-4 md:-right-6 -top-4 md:-top-6 -bottom-4 md:-bottom-6 bg-white/[0.04] border border-white/15 rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-[1px] pointer-events-none"></div>
+                            <div class="beosound-unit relative">
+                                <div class="beosound-wood"></div>
+                                <div class="beosound-glass" id="beosound-rack">
+                                    <div class="beosound-led"></div>
+                                </div>
                             </div>
+                        </div>
+                        <div class="mt-4 text-center max-w-[220px] pointer-events-none">
+                            <div class="text-[7px] md:text-[8px] font-mono text-white/30 tracking-[0.3em] uppercase mb-1">CD5600 Beosound — Now Playing</div>
+                            <div id="beosound-now-playing" class="text-[9px] md:text-[11px] font-mono text-[#ffcc00] tracking-widest uppercase truncate">—</div>
                         </div>
                     </div>
                 </div>
