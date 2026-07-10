@@ -491,7 +491,7 @@ window.renderBeosound = function() {
     if (!rack || fullCatalog.length === 0) return;
     const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
     window.beosoundQueue = [...fullCatalog].sort(() => 0.5 - Math.random()).slice(0, 6);
-    rack.innerHTML = '<div class="beosound-led"></div>' + window.beosoundQueue.map((p, i) => `
+    rack.innerHTML = '<div class="beosound-led"></div><div class="beosound-arm" id="beosound-arm"><div class="beosound-arm-mount"></div><div class="beosound-arm-hook"></div></div>' + window.beosoundQueue.map((p, i) => `
         <div class="beosound-disc ${i === 0 ? 'active' : ''}" data-index="${i}">
             <div class="beosound-disc-inner" style="background-image: url('${window.getImg(p) || fallbackImg}')"></div>
             <div class="beosound-disc-shine"></div>
@@ -500,6 +500,7 @@ window.renderBeosound = function() {
     `).join('');
     window.beosoundIndex = 0;
     window.updateBeosoundLabel();
+    requestAnimationFrame(() => window.updateBeosoundArm());
     window.beosoundCycle();
 }
 
@@ -507,6 +508,19 @@ window.updateBeosoundLabel = function() {
     const p = window.beosoundQueue[window.beosoundIndex];
     const label = document.getElementById('beosound-now-playing');
     if (label && p) label.textContent = `${p.artist} — ${p.album}`;
+}
+
+window.updateBeosoundArm = function() {
+    const rack = document.getElementById('beosound-rack');
+    const arm = document.getElementById('beosound-arm');
+    const discs = document.querySelectorAll('#beosound-rack .beosound-disc');
+    const activeDisc = discs[window.beosoundIndex];
+    if (!rack || !arm || !activeDisc) return;
+    const rackRect = rack.getBoundingClientRect();
+    const discRect = activeDisc.getBoundingClientRect();
+    const armWidth = arm.getBoundingClientRect().width;
+    const x = (discRect.left - rackRect.left) + (discRect.width / 2) - (armWidth / 2);
+    arm.style.transform = `translateX(${x}px)`;
 }
 
 window.beosoundCycle = function() {
@@ -518,9 +532,12 @@ window.beosoundCycle = function() {
         window.beosoundIndex = (window.beosoundIndex + 1) % window.beosoundQueue.length;
         discs[window.beosoundIndex]?.classList.add('active');
         window.updateBeosoundLabel();
+        window.updateBeosoundArm();
         window.beosoundCycle();
     }, 5500);
 }
+
+window.addEventListener('resize', () => window.updateBeosoundArm());
 
 window.renderSocials = async function() {
     const grid = document.getElementById('insta-grid');
