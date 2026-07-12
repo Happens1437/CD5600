@@ -244,23 +244,6 @@
             pointer-events: none;
         }
 
-        /* Soft frosted tint over the lid. The source render's transparent
-           lid was exported with a checkerboard baked into its pixels rather
-           than real alpha there (only the outer background had true alpha),
-           so a flat tint over that same polygon reads as translucent glass
-           instead of a checker artifact, while still letting the etched
-           reflection linework show through faintly. */
-        .player-lid-tint {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.6);
-            clip-path: polygon(32% 29%, 66% 40%, 72% 59%, 39% 55%);
-            -webkit-clip-path: polygon(32% 29%, 66% 40%, 72% 59%, 39% 55%);
-            pointer-events: none;
-        }
-
         /* Spinning disc: a clipped duplicate of the same image, masked down
            to a circle over the disc and rotated in place — no extra art
            needed, and it stays aligned across breakpoints since it shares
@@ -272,9 +255,9 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            clip-path: circle(17% at 47% 62%);
-            -webkit-clip-path: circle(17% at 47% 62%);
-            transform-origin: 47% 62%;
+            clip-path: circle(14% at 54% 56%);
+            -webkit-clip-path: circle(14% at 54% 56%);
+            transform-origin: 54% 56%;
             animation: player-disc-rotate 52s linear infinite;
             pointer-events: none;
             user-select: none;
@@ -465,7 +448,6 @@
                                     <div class="player-tilt" id="player-tilt">
                                         <div class="player-visual">
                                             <img src="/cd-player.png" alt="CD5600 CD player" class="player-image" draggable="false">
-                                            <div class="player-lid-tint"></div>
                                             <img src="/cd-player.png" alt="" aria-hidden="true" class="player-disc-spin" draggable="false">
                                             <div class="player-highlight"></div>
                                         </div>
