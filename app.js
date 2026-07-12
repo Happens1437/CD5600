@@ -459,7 +459,6 @@ window.renderAll = function() {
     const newArr = document.getElementById('new-arrivals-list');
     const randomCatalog = [...fullCatalog].sort(() => 0.5 - Math.random());
     if (carousel) carousel.innerHTML = randomCatalog.slice(0, 6).map(p => window.cardHtml(p, true)).join('');
-    window.renderBeosound();
     window.applyFilters();
     if (newArr && fullCatalog.length > 0) {
         const newestFirst = [...fullCatalog].sort((a, b) => new Date(b.dateAdded || 0) - new Date(a.dateAdded || 0));
@@ -482,62 +481,57 @@ window.scrollCarousel = function(dir) {
     document.getElementById('home-carousel').scrollBy({ left: dir * 300, behavior: 'smooth' });
 }
 
-window.beosoundQueue = [];
-window.beosoundIndex = 0;
-window.beosoundTimer = null;
+// ==========================================
+// 🎧 HERO CD PLAYER — floating object interactions
+// Idle motion (bob, tumble, disc-spin, light-sweep) is pure CSS
+// (see .player-* rules in index.html). This handles the parts that need
+// JS: mouse-parallax tilt (lerped toward a target each animation frame,
+// transform-only) and the hover lift/scale.
+// ==========================================
+window.initPlayerParallax = function() {
+    const scene = document.getElementById('player-scene');
+    const tilt = document.getElementById('player-tilt');
+    const heroSection = document.getElementById('home');
+    if (!scene || !tilt || !heroSection) return;
 
-window.renderBeosound = function() {
-    const rack = document.getElementById('beosound-rack');
-    if (!rack || fullCatalog.length === 0) return;
-    const fallbackImg = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=600&q=80";
-    window.beosoundQueue = [...fullCatalog].sort(() => 0.5 - Math.random()).slice(0, 6);
-    rack.innerHTML = '<div class="beosound-led"></div><div class="beosound-arm" id="beosound-arm"><div class="beosound-arm-mount"></div><div class="beosound-arm-hook"></div></div>' + window.beosoundQueue.map((p, i) => `
-        <div class="beosound-disc ${i === 0 ? 'active' : ''}" data-index="${i}">
-            <div class="beosound-disc-inner" style="background-image: url('${window.getImg(p) || fallbackImg}')"></div>
-            <div class="beosound-disc-shine"></div>
-            <div class="beosound-disc-hub"><span>CD<br>5600</span></div>
-        </div>
-    `).join('');
-    window.beosoundIndex = 0;
-    window.updateBeosoundLabel();
-    requestAnimationFrame(() => window.updateBeosoundArm());
-    window.beosoundCycle();
+    const LERP = 0.08;
+    let targetRX = 0, targetRY = 0, targetTX = 0, targetTY = 0, targetScale = 1;
+    let curRX = 0, curRY = 0, curTX = 0, curTY = 0, curScale = 1;
+
+    function onMove(e) {
+        const rect = scene.getBoundingClientRect();
+        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        targetRY = nx * 8;
+        targetRX = -ny * 5;
+        targetTX = nx * 12;
+        targetTY = ny * 12;
+    }
+
+    function onEnter() {
+        scene.classList.add('is-hovering');
+        targetScale = 1.02;
+    }
+
+    function onLeave() {
+        scene.classList.remove('is-hovering');
+        targetRX = 0; targetRY = 0; targetTX = 0; targetTY = 0; targetScale = 1;
+    }
+
+    heroSection.addEventListener('mousemove', onMove);
+    scene.addEventListener('mouseenter', onEnter);
+    scene.addEventListener('mouseleave', onLeave);
+
+    (function tick() {
+        curRX += (targetRX - curRX) * LERP;
+        curRY += (targetRY - curRY) * LERP;
+        curTX += (targetTX - curTX) * LERP;
+        curTY += (targetTY - curTY) * LERP;
+        curScale += (targetScale - curScale) * LERP;
+        tilt.style.transform = `translate(${curTX.toFixed(2)}px, ${curTY.toFixed(2)}px) rotateX(${curRX.toFixed(2)}deg) rotateY(${curRY.toFixed(2)}deg) scale(${curScale.toFixed(3)})`;
+        requestAnimationFrame(tick);
+    })();
 }
-
-window.updateBeosoundLabel = function() {
-    const p = window.beosoundQueue[window.beosoundIndex];
-    const label = document.getElementById('beosound-now-playing');
-    if (label && p) label.textContent = `${p.artist} — ${p.album}`;
-}
-
-window.updateBeosoundArm = function() {
-    const rack = document.getElementById('beosound-rack');
-    const arm = document.getElementById('beosound-arm');
-    const discs = document.querySelectorAll('#beosound-rack .beosound-disc');
-    const activeDisc = discs[window.beosoundIndex];
-    if (!rack || !arm || !activeDisc) return;
-    const rackRect = rack.getBoundingClientRect();
-    const discRect = activeDisc.getBoundingClientRect();
-    const armWidth = arm.getBoundingClientRect().width;
-    const x = (discRect.left - rackRect.left) + (discRect.width / 2) - (armWidth / 2);
-    arm.style.transform = `translateX(${x}px)`;
-}
-
-window.beosoundCycle = function() {
-    clearTimeout(window.beosoundTimer);
-    window.beosoundTimer = setTimeout(() => {
-        const discs = document.querySelectorAll('#beosound-rack .beosound-disc');
-        if (discs.length === 0) return;
-        discs[window.beosoundIndex]?.classList.remove('active');
-        window.beosoundIndex = (window.beosoundIndex + 1) % window.beosoundQueue.length;
-        discs[window.beosoundIndex]?.classList.add('active');
-        window.updateBeosoundLabel();
-        window.updateBeosoundArm();
-        window.beosoundCycle();
-    }, 5500);
-}
-
-window.addEventListener('resize', () => window.updateBeosoundArm());
 
 window.renderSocials = async function() {
     const grid = document.getElementById('insta-grid');
@@ -617,6 +611,7 @@ window.onload = async () => {
     fullCatalog = await res.json();
     window.populateFilters();
     window.renderAll();
+    window.initPlayerParallax();
     await window.renderSocials();
     window.updateCartUI();
     window.applyTranslations();
