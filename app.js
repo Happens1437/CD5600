@@ -482,55 +482,94 @@ window.scrollCarousel = function(dir) {
 }
 
 // ==========================================
-// 🎧 HERO CD PLAYER — floating object interactions
-// Idle motion (bob, tumble, disc-spin, light-sweep) is pure CSS
-// (see .player-* rules in index.html). This handles the parts that need
-// JS: mouse-parallax tilt (lerped toward a target each animation frame,
-// transform-only) and the hover lift/scale.
+// 🎧 HERO CD PLAYER — user-designed widget (built in a separate Claude
+// session; this is that widget's own JS, ported in as-authored — same
+// physics-based spin-up/spin-down, motion blur, and playback state
+// machine, just wrapped in a named init function instead of an
+// auto-running IIFE so it starts from window.onload like everything else.
 // ==========================================
-window.initPlayerParallax = function() {
-    const scene = document.getElementById('player-scene');
-    const tilt = document.getElementById('player-tilt');
-    const heroSection = document.getElementById('home');
-    if (!scene || !tilt || !heroSection) return;
+window.initCd5600Player = function() {
+    const root = document.getElementById('cd5600');
+    if (!root) return;
+    const $ = (s) => root.querySelector(s);
+    const disc = $('[data-disc]'), art = $('[data-art]'), halo = $('[data-halo]'), led = $('[data-led]'),
+        sweep = $('[data-sweep]'), dot = $('[data-dot]'), trackEl = $('[data-track]'), timeEl = $('[data-time]'),
+        statusEl = $('[data-status]'), playBtn = $('[data-play]'), powerIcon = $('[data-power] svg');
 
-    const LERP = 0.08;
-    let targetRX = 0, targetRY = 0, targetTX = 0, targetTY = 0, targetScale = 1;
-    let curRX = 0, curRY = 0, curTX = 0, curTY = 0, curScale = 1;
+    const MAX = 240; // deg/sec (~40 RPM — logo stays readable). Use ~3000 for realistic 500 RPM.
+    let powered = false, playing = false, track = 1;
+    let vel = 0, angle = 0, fluct = 0, last = null, elapsed = 0;
 
-    function onMove(e) {
-        const rect = scene.getBoundingClientRect();
-        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-        targetRY = nx * 8;
-        targetRX = -ny * 5;
-        targetTX = nx * 12;
-        targetTY = ny * 12;
+    const PLAY_SVG = '<svg width="22" height="24" viewBox="0 0 22 24"><polygon points="4,2 4,22 20,12"/></svg>';
+    const PAUSE_SVG = '<svg width="20" height="22" viewBox="0 0 20 22"><rect x="3" y="2" width="4.5" height="18" rx="1.4"/><rect x="12.5" y="2" width="4.5" height="18" rx="1.4"/></svg>';
+
+    function sync() {
+        [$('[data-prev]'), playBtn, $('[data-next]')].forEach((b) => {
+            b.style.opacity = powered ? '1' : '0.34'; b.style.pointerEvents = powered ? 'auto' : 'none';
+        });
+        powerIcon.querySelectorAll('path,line').forEach((n) => n.setAttribute('stroke', powered ? 'var(--acc)' : '#9a9aa0'));
+        powerIcon.style.filter = powered ? 'drop-shadow(0 0 6px color-mix(in srgb,var(--acc) 80%,transparent))' : 'none';
+        dot.style.background = powered ? 'var(--acc)' : '#3a2b0a';
+        dot.style.boxShadow = powered ? '0 0 8px 1px color-mix(in srgb,var(--acc) 80%,transparent)' : 'none';
+        dot.style.animation = (powered && playing) ? 'cdLedBlink 1.1s ease-in-out infinite' : 'none';
+        statusEl.textContent = !powered ? 'STANDBY' : (playing ? 'PLAYING' : 'PAUSED');
+        statusEl.style.color = powered ? 'color-mix(in srgb,var(--acc) 85%,white)' : 'rgba(255,255,255,.34)';
+        playBtn.innerHTML = playing ? PAUSE_SVG : PLAY_SVG;
+        trackEl.textContent = 'TR ' + String(track).padStart(2, '0');
     }
 
-    function onEnter() {
-        scene.classList.add('is-hovering');
-        targetScale = 1.02;
+    function togglePower() {
+        powered = !powered; if (!powered) playing = false;
+        if (powered) {
+            led.style.animation = 'none'; void led.offsetWidth;
+            led.style.animation = 'cdSeamRipple 1s ease-out forwards, cdIdlePulse 4.5s ease-in-out 1s infinite';
+            sweep.style.animation = 'none'; void sweep.offsetWidth; sweep.style.animation = 'cdSweep 1.2s ease-out';
+        } else { led.style.animation = 'none'; led.style.opacity = '0'; elapsed = 0; }
+        sync();
+    }
+    function togglePlay() { if (powered) { playing = !playing; sync(); } }
+    function fluctMag() { return MAX * 0.5; }
+    function changeTrack(d) {
+        if (!powered) return;
+        track += d; if (track < 1) track = 12; if (track > 12) track = 1;
+        elapsed = 0; fluct = d > 0 ? -fluctMag() : fluctMag();
+        sync();
+        trackEl.style.animation = 'none'; void trackEl.offsetWidth; trackEl.style.animation = 'cdFlash .55s ease-in-out';
     }
 
-    function onLeave() {
-        scene.classList.remove('is-hovering');
-        targetRX = 0; targetRY = 0; targetTX = 0; targetTY = 0; targetScale = 1;
-    }
+    $('[data-power]').addEventListener('click', togglePower);
+    playBtn.addEventListener('click', togglePlay);
+    $('[data-next]').addEventListener('click', () => changeTrack(1));
+    $('[data-prev]').addEventListener('click', () => changeTrack(-1));
 
-    heroSection.addEventListener('mousemove', onMove);
-    scene.addEventListener('mouseenter', onEnter);
-    scene.addEventListener('mouseleave', onLeave);
-
-    (function tick() {
-        curRX += (targetRX - curRX) * LERP;
-        curRY += (targetRY - curRY) * LERP;
-        curTX += (targetTX - curTX) * LERP;
-        curTY += (targetTY - curTY) * LERP;
-        curScale += (targetScale - curScale) * LERP;
-        tilt.style.transform = `translate(${curTX.toFixed(2)}px, ${curTY.toFixed(2)}px) rotateX(${curRX.toFixed(2)}deg) rotateY(${curRY.toFixed(2)}deg) scale(${curScale.toFixed(3)})`;
+    function tick(t) {
+        if (last == null) last = t;
+        let dt = (t - last) / 1000; last = t; if (dt > 0.05) dt = 0.05;
+        const spinning = powered && playing;
+        const tgt = spinning ? MAX + fluct : 0;
+        fluct += (0 - fluct) * Math.min(1, 3 * dt);
+        const k = tgt > vel ? 1.9 : 2.8;
+        vel += (tgt - vel) * Math.min(1, k * dt);
+        if (!spinning && Math.abs(vel) < 6) {
+            vel = 0; const near = Math.round(angle / 360) * 360;
+            angle += (near - angle) * Math.min(1, 9 * dt);
+            if (Math.abs(near - angle) < 0.15) angle = near % 360;
+        } else { angle = (angle + vel * dt) % 360; }
+        const speed = Math.min(1, Math.abs(vel) / MAX);
+        disc.style.transform = 'rotate(' + angle.toFixed(2) + 'deg)';
+        art.style.filter = 'blur(' + (speed * 0.7).toFixed(2) + 'px)';
+        halo.style.opacity = (speed * 0.4).toFixed(3);
+        if (spinning) elapsed += dt;
+        const s = Math.floor(elapsed);
+        timeEl.textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
         requestAnimationFrame(tick);
-    })();
+    }
+
+    sync();
+    requestAnimationFrame(tick);
+    // auto power-on + auto-play so it's already "alive" without needing a click
+    setTimeout(togglePower, 700);
+    setTimeout(() => { if (powered && !playing) togglePlay(); }, 2000);
 }
 
 window.renderSocials = async function() {
@@ -611,7 +650,7 @@ window.onload = async () => {
     fullCatalog = await res.json();
     window.populateFilters();
     window.renderAll();
-    window.initPlayerParallax();
+    window.initCd5600Player();
     await window.renderSocials();
     window.updateCartUI();
     window.applyTranslations();
